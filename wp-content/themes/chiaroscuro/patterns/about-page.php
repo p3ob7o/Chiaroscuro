@@ -31,11 +31,11 @@
 			<div class="chiaroscuro-row-list">
 				<a class="chiaroscuro-row-link" href="https://automattic.com" target="_blank" rel="noopener">
 					<span class="chiaroscuro-row-title">Artistic Director, Domains Maison</span>
-					<span class="chiaroscuro-row-note">Automattic -&gt;</span>
+					<span class="chiaroscuro-row-note">Automattic &#8599;&#65038;</span>
 				</a>
 				<a class="chiaroscuro-row-link" href="https://weelo.cloud" target="_blank" rel="noopener">
 					<span class="chiaroscuro-row-title">Managing Partner</span>
-					<span class="chiaroscuro-row-note">The WEELO Factory -&gt;</span>
+					<span class="chiaroscuro-row-note">The WEELO Factory &#8599;&#65038;</span>
 				</a>
 			</div>
 		</section>
@@ -45,19 +45,19 @@
 			<div class="chiaroscuro-row-list">
 				<a class="chiaroscuro-row-link" href="https://ttl.blog" target="_blank" rel="noopener">
 					<span class="chiaroscuro-row-title">TTL.blog</span>
-					<span class="chiaroscuro-row-note">tools &amp; thoughts for leaders -&gt;</span>
+					<span class="chiaroscuro-row-note">tools &amp; thoughts for leaders &#8599;&#65038;</span>
 				</a>
 				<a class="chiaroscuro-row-link" href="https://monochrome.blog" target="_blank" rel="noopener">
 					<span class="chiaroscuro-row-title">Monochrome.blog</span>
-					<span class="chiaroscuro-row-note">a blog about photography -&gt;</span>
+					<span class="chiaroscuro-row-note">a blog about photography &#8599;&#65038;</span>
 				</a>
 				<a class="chiaroscuro-row-link" href="https://monochrome.photo" target="_blank" rel="noopener">
 					<span class="chiaroscuro-row-title">Monochrome.photo</span>
-					<span class="chiaroscuro-row-note">my photos, in black &amp; white -&gt;</span>
+					<span class="chiaroscuro-row-note">my photos, in black &amp; white &#8599;&#65038;</span>
 				</a>
 				<a class="chiaroscuro-row-link" href="https://paolobelcastro.com" target="_blank" rel="noopener">
 					<span class="chiaroscuro-row-title">PaoloBelcastro.com</span>
-					<span class="chiaroscuro-row-note">my central hub -&gt;</span>
+					<span class="chiaroscuro-row-note">my central hub &#8599;&#65038;</span>
 				</a>
 			</div>
 		</section>
