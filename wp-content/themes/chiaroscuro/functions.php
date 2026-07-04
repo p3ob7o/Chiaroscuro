@@ -17,9 +17,11 @@ add_filter( 'should_load_remote_block_patterns', '__return_false' );
 add_filter( 'query_loop_block_query_vars', 'chiaroscuro_related_query_vars', 10, 3 );
 add_filter( 'comment_form_defaults', 'chiaroscuro_comment_form_defaults' );
 add_filter( 'comment_form_default_fields', 'chiaroscuro_comment_form_fields' );
+add_filter( 'pre_option_use_smilies', '__return_zero' );
 add_filter( 'render_block_core/comments-title', 'chiaroscuro_render_comments_title', 10, 2 );
 add_filter( 'render_block_core/navigation', 'chiaroscuro_render_navigation', 10, 2 );
 add_filter( 'render_block_core/navigation-link', 'chiaroscuro_render_navigation_link', 10, 2 );
+add_filter( 'render_block_core/post-featured-image', 'chiaroscuro_render_featured_image_caption', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_related_query', 10, 2 );
 
 /**
@@ -143,6 +145,40 @@ function chiaroscuro_render_navigation_link( string $content, array $block ): st
 	}
 
 	return preg_replace( '/class="([^"]*wp-block-navigation-item[^"]*)"/', 'class="$1 current-menu-item"', $content, 1 ) ?? $content;
+}
+
+/**
+ * Add the featured image attachment caption to the post hero.
+ *
+ * @param string $content Rendered block content.
+ * @param array  $block   Parsed block.
+ * @return string
+ */
+function chiaroscuro_render_featured_image_caption( string $content, array $block ): string {
+	$class_name = $block['attrs']['className'] ?? '';
+
+	if ( ! is_singular() || ! str_contains( $class_name, 'chiaroscuro-post-hero' ) || str_contains( $content, '<figcaption' ) ) {
+		return $content;
+	}
+
+	$thumbnail_id = get_post_thumbnail_id();
+
+	if ( ! $thumbnail_id ) {
+		return $content;
+	}
+
+	$caption = wp_get_attachment_caption( $thumbnail_id );
+
+	if ( '' === $caption ) {
+		return $content;
+	}
+
+	$caption_markup = sprintf(
+		'<figcaption class="wp-element-caption">%s</figcaption>',
+		esc_html( $caption )
+	);
+
+	return preg_replace( '#</figure>\s*$#', $caption_markup . '</figure>', $content, 1 ) ?? $content;
 }
 
 /**
