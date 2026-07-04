@@ -19,6 +19,7 @@ add_filter( 'comment_form_defaults', 'chiaroscuro_comment_form_defaults' );
 add_filter( 'comment_form_default_fields', 'chiaroscuro_comment_form_fields' );
 add_filter( 'pre_option_use_smilies', '__return_zero' );
 add_filter( 'render_block_core/comments-title', 'chiaroscuro_render_comments_title', 10, 2 );
+add_filter( 'comment_text', 'chiaroscuro_normalize_comment_smilies', 99 );
 add_filter( 'render_block_core/navigation', 'chiaroscuro_render_navigation', 10, 2 );
 add_filter( 'render_block_core/navigation-link', 'chiaroscuro_render_navigation_link', 10, 2 );
 add_filter( 'render_block_core/post-featured-image', 'chiaroscuro_render_featured_image_caption', 10, 2 );
@@ -156,8 +157,9 @@ function chiaroscuro_render_navigation_link( string $content, array $block ): st
  */
 function chiaroscuro_render_featured_image_caption( string $content, array $block ): string {
 	$class_name = $block['attrs']['className'] ?? '';
+	$is_hero    = str_contains( $class_name, 'chiaroscuro-post-hero' ) || str_contains( $content, 'chiaroscuro-post-hero' );
 
-	if ( ! is_singular() || ! str_contains( $class_name, 'chiaroscuro-post-hero' ) || str_contains( $content, '<figcaption' ) ) {
+	if ( ! is_singular() || ! $is_hero || str_contains( $content, '<figcaption' ) ) {
 		return $content;
 	}
 
@@ -178,7 +180,21 @@ function chiaroscuro_render_featured_image_caption( string $content, array $bloc
 		esc_html( $caption )
 	);
 
-	return preg_replace( '#</figure>\s*$#', $caption_markup . '</figure>', $content, 1 ) ?? $content;
+	return preg_replace( '#</figure>#', $caption_markup . '</figure>', $content, 1 ) ?? $content;
+}
+
+/**
+ * Keep common comment smileys as text instead of rendered emoji glyphs.
+ *
+ * @param string $content Rendered comment text.
+ * @return string
+ */
+function chiaroscuro_normalize_comment_smilies( string $content ): string {
+	return str_replace(
+		html_entity_decode( '&#x1f642;', ENT_QUOTES, 'UTF-8' ),
+		':)',
+		$content
+	);
 }
 
 /**
