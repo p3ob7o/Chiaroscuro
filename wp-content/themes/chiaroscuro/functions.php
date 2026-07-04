@@ -11,6 +11,7 @@ add_action( 'wp_head', 'chiaroscuro_print_theme_boot_script', 0 );
 add_action( 'init', 'chiaroscuro_register_blocks' );
 add_action( 'init', 'chiaroscuro_register_pattern_category' );
 add_action( 'init', 'chiaroscuro_unregister_non_theme_patterns', 100 );
+add_action( 'init', 'chiaroscuro_disable_emoji_support' );
 add_action( 'enqueue_block_editor_assets', 'chiaroscuro_enqueue_editor_assets' );
 add_filter( 'should_load_remote_block_patterns', '__return_false' );
 add_filter( 'query_loop_block_query_vars', 'chiaroscuro_related_query_vars', 10, 3 );
@@ -76,6 +77,16 @@ function chiaroscuro_register_blocks(): void {
 	);
 
 	register_block_type( __DIR__ . '/blocks/theme-toggle' );
+}
+
+/**
+ * Keep comments and frontend chrome in the theme's text-only monochrome system.
+ */
+function chiaroscuro_disable_emoji_support(): void {
+	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+	remove_action( 'wp_print_styles', 'print_emoji_styles' );
+	remove_action( 'wp_print_styles', 'wp_enqueue_emoji_styles' );
+	remove_filter( 'comment_text', 'convert_smilies', 20 );
 }
 
 /**
@@ -343,6 +354,10 @@ function chiaroscuro_comment_form_fields( array $fields ): array {
 
 	if ( isset( $fields['url'] ) ) {
 		unset( $fields['url'] );
+	}
+
+	if ( isset( $fields['cookies'] ) ) {
+		unset( $fields['cookies'] );
 	}
 
 	return $fields;
