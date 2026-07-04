@@ -122,8 +122,10 @@ function chiaroscuro_render_navigation_link( string $content, array $block ): st
 	}
 
 	$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
-	$link_path    = trailingslashit( wp_parse_url( home_url( $url ), PHP_URL_PATH ) ?: '/' );
-	$current_path = trailingslashit( wp_parse_url( $request_uri, PHP_URL_PATH ) ?: '/' );
+	$link_path    = wp_parse_url( home_url( $url ), PHP_URL_PATH );
+	$current_path = wp_parse_url( $request_uri, PHP_URL_PATH );
+	$link_path    = trailingslashit( is_string( $link_path ) && '' !== $link_path ? $link_path : '/' );
+	$current_path = trailingslashit( is_string( $current_path ) && '' !== $current_path ? $current_path : '/' );
 
 	if ( $link_path !== $current_path || str_contains( $content, 'current-menu-item' ) ) {
 		return $content;
@@ -183,6 +185,8 @@ function chiaroscuro_enqueue_editor_assets(): void {
  * @return array
  */
 function chiaroscuro_related_query_vars( array $query, WP_Block $block, int $page ): array {
+	unset( $page );
+
 	$namespace = $block->parsed_block['attrs']['namespace'] ?? '';
 
 	if ( 'chiaroscuro-related' !== $namespace ) {
@@ -203,12 +207,12 @@ function chiaroscuro_related_query_vars( array $query, WP_Block $block, int $pag
 		return $query;
 	}
 
-	$query['tag__in']            = $tag_ids;
-	$query['post__not_in']      = array( $post_id );
-	$query['posts_per_page']    = 4;
+	$query['tag__in']             = $tag_ids;
+	$query['post__not_in']        = array( $post_id );
+	$query['posts_per_page']      = 4;
 	$query['ignore_sticky_posts'] = true;
-	$query['orderby']           = 'date';
-	$query['order']             = 'DESC';
+	$query['orderby']             = 'date';
+	$query['order']               = 'DESC';
 
 	return $query;
 }
@@ -262,26 +266,31 @@ function chiaroscuro_render_related_query( string $content, array $block ): stri
 	?>
 	<div class="wp-block-query">
 		<ul class="wp-block-post-template">
-			<?php
-			while ( $related->have_posts() ) :
-				$related->the_post();
-				?>
-				<li <?php post_class( 'wp-block-post' ); ?>>
-					<?php if ( has_post_thumbnail() ) : ?>
-						<figure class="wp-block-post-featured-image">
-							<a href="<?php echo esc_url( get_permalink() ); ?>"><?php the_post_thumbnail( 'medium_large' ); ?></a>
-						</figure>
-					<?php else : ?>
-						<div class="wp-block-post-featured-image chiaroscuro-related__placeholder" aria-hidden="true"></div>
-					<?php endif; ?>
-					<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y' ) ); ?></time></div>
+				<?php
+				while ( $related->have_posts() ) :
+					$related->the_post();
+					$thumbnail_label = sprintf(
+						/* translators: %s: post title. */
+						__( 'Read %s', 'chiaroscuro' ),
+						get_the_title()
+					);
+					?>
+					<li <?php post_class( 'wp-block-post' ); ?>>
+						<?php if ( has_post_thumbnail() ) : ?>
+							<figure class="wp-block-post-featured-image">
+								<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium_large' ); ?></a>
+							</figure>
+						<?php else : ?>
+							<div class="wp-block-post-featured-image chiaroscuro-related__placeholder" aria-hidden="true"></div>
+						<?php endif; ?>
+						<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y' ) ); ?></time></div>
 					<h3 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h3>
 					<div class="wp-block-post-excerpt"><p class="wp-block-post-excerpt__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 12 ) ); ?></p></div>
 				</li>
-				<?php
+					<?php
 			endwhile;
-			wp_reset_postdata();
-			?>
+				wp_reset_postdata();
+				?>
 		</ul>
 	</div>
 	<?php
@@ -347,12 +356,20 @@ function chiaroscuro_comment_form_fields( array $fields ): array {
  * @return string
  */
 function chiaroscuro_render_comments_title( string $content, array $block ): string {
+	unset( $block );
+
 	if ( ! is_singular() ) {
 		return $content;
 	}
 
 	return sprintf(
 		'<h2 class="wp-block-comments-title">%s</h2>',
-		esc_html( sprintf( __( 'Responses — %s', 'chiaroscuro' ), number_format_i18n( get_comments_number() ) ) )
+		esc_html(
+			sprintf(
+				/* translators: %s: formatted number of comments. */
+				__( 'Responses — %s', 'chiaroscuro' ),
+				number_format_i18n( get_comments_number() )
+			)
+		)
 	);
 }

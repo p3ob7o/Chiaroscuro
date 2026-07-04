@@ -7,6 +7,7 @@
  *
  * @package Chiaroscuro
  */
+
 ?>
 <!-- wp:html -->
 <section class="chiaroscuro-most-read">

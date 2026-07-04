@@ -7,7 +7,9 @@
 		<!-- wp:group {"className":"chiaroscuro-post-meta"} -->
 		<div class="wp-block-group chiaroscuro-post-meta">
 			<!-- wp:post-terms {"term":"category","separator":""} /-->
-			<span class="chiaroscuro-meta-separator">/</span>
+			<!-- wp:paragraph {"className":"chiaroscuro-meta-separator"} -->
+			<p class="chiaroscuro-meta-separator">/</p>
+			<!-- /wp:paragraph -->
 			<!-- wp:post-date {"format":"M j, Y"} /-->
 		</div>
 		<!-- /wp:group -->
@@ -21,11 +23,18 @@
 
 	<!-- wp:group {"tagName":"section","className":"chiaroscuro-related"} -->
 	<section class="wp-block-group chiaroscuro-related">
-		<div class="chiaroscuro-wide-band">
-			<div class="chiaroscuro-section-heading chiaroscuro-related__head">
-				<span class="chiaroscuro-section-label">Related posts</span>
-				<span class="chiaroscuro-date">tag &mdash; from my window</span>
+		<!-- wp:group {"className":"chiaroscuro-wide-band"} -->
+		<div class="wp-block-group chiaroscuro-wide-band">
+			<!-- wp:group {"className":"chiaroscuro-section-heading chiaroscuro-related__head","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"baseline"}} -->
+			<div class="wp-block-group chiaroscuro-section-heading chiaroscuro-related__head">
+				<!-- wp:paragraph {"className":"chiaroscuro-section-label"} -->
+				<p class="chiaroscuro-section-label">Related posts</p>
+				<!-- /wp:paragraph -->
+				<!-- wp:paragraph {"className":"chiaroscuro-date"} -->
+				<p class="chiaroscuro-date">tag &mdash; from my window</p>
+				<!-- /wp:paragraph -->
 			</div>
+			<!-- /wp:group -->
 			<!-- wp:query {"namespace":"chiaroscuro-related","query":{"perPage":4,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":false}} -->
 			<div class="wp-block-query">
 				<!-- wp:post-template -->
@@ -42,6 +51,7 @@
 			</div>
 			<!-- /wp:query -->
 		</div>
+		<!-- /wp:group -->
 	</section>
 	<!-- /wp:group -->
 
