@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "chiaroscuro/theme-toggle",
+	"title": "Theme Toggle",
+	"category": "theme",
+	"icon": "visibility",
+	"description": "Toggle Chiaroscuro between light and dark mode.",
+	"textdomain": "chiaroscuro",
+	"supports": {
+		"align": false,
+		"html": false,
+		"spacing": false
+	},
+	"viewScript": "chiaroscuro-theme-toggle",
+	"render": "file:./render.php"
+}

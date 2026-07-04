@@ -1,0 +1,83 @@
+<!-- wp:template-part {"slug":"header","theme":"chiaroscuro"} /-->
+
+<!-- wp:group {"tagName":"main","className":"chiaroscuro-main chiaroscuro-post-main"} -->
+<main class="wp-block-group chiaroscuro-main chiaroscuro-post-main">
+	<!-- wp:group {"tagName":"article","className":"chiaroscuro-post-article"} -->
+	<article class="wp-block-group chiaroscuro-post-article">
+		<!-- wp:group {"className":"chiaroscuro-post-meta"} -->
+		<div class="wp-block-group chiaroscuro-post-meta">
+			<!-- wp:post-terms {"term":"category","separator":""} /-->
+			<span class="chiaroscuro-meta-separator">/</span>
+			<!-- wp:post-date {"format":"M j, Y"} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:post-title {"level":1,"className":"chiaroscuro-post-title"} /-->
+		<!-- wp:post-featured-image {"align":"wide","className":"chiaroscuro-post-hero"} /-->
+
+		<!-- wp:post-content {"className":"chiaroscuro-post-content","layout":{"type":"constrained","contentSize":"680px"}} /-->
+	</article>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"tagName":"section","className":"chiaroscuro-related"} -->
+	<section class="wp-block-group chiaroscuro-related">
+		<div class="chiaroscuro-wide-band">
+			<div class="chiaroscuro-section-heading chiaroscuro-related__head">
+				<span class="chiaroscuro-section-label">Related posts</span>
+				<span class="chiaroscuro-date">tag &mdash; from my window</span>
+			</div>
+			<!-- wp:query {"namespace":"chiaroscuro-related","query":{"perPage":4,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":false}} -->
+			<div class="wp-block-query">
+				<!-- wp:post-template -->
+					<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"4/5"} /-->
+					<!-- wp:post-date {"format":"M j, Y"} /-->
+					<!-- wp:post-title {"isLink":true,"level":3} /-->
+					<!-- wp:post-excerpt {"moreText":"","showMoreOnNewLine":false,"excerptLength":12} /-->
+				<!-- /wp:post-template -->
+				<!-- wp:query-no-results -->
+					<!-- wp:paragraph {"className":"screen-reader-text"} -->
+					<p class="screen-reader-text">No related posts.</p>
+					<!-- /wp:paragraph -->
+				<!-- /wp:query-no-results -->
+			</div>
+			<!-- /wp:query -->
+		</div>
+	</section>
+	<!-- /wp:group -->
+
+	<!-- wp:group {"tagName":"nav","className":"chiaroscuro-post-navigation"} -->
+	<nav class="wp-block-group chiaroscuro-post-navigation">
+		<!-- wp:post-navigation-link {"type":"previous","label":"← Older","showTitle":true,"linkLabel":true} /-->
+		<!-- wp:post-navigation-link {"type":"next","label":"Newer →","showTitle":true,"linkLabel":true} /-->
+	</nav>
+	<!-- /wp:group -->
+
+	<!-- wp:comments {"className":"chiaroscuro-comments"} -->
+	<div class="wp-block-comments chiaroscuro-comments">
+		<!-- wp:comments-title {"showPostTitle":false,"level":2} /-->
+		<!-- wp:comment-template -->
+			<!-- wp:columns {"isStackedOnMobile":false,"style":{"spacing":{"blockGap":{"left":"16px"}}}} -->
+			<div class="wp-block-columns is-not-stacked-on-mobile">
+				<!-- wp:column {"width":"34px"} -->
+				<div class="wp-block-column" style="flex-basis:34px">
+					<!-- wp:avatar {"size":34} /-->
+				</div>
+				<!-- /wp:column -->
+				<!-- wp:column -->
+				<div class="wp-block-column">
+					<!-- wp:comment-author-name /-->
+					<!-- wp:comment-date {"format":"M j, Y"} /-->
+					<!-- wp:comment-content /-->
+					<!-- wp:comment-reply-link /-->
+				</div>
+				<!-- /wp:column -->
+			</div>
+			<!-- /wp:columns -->
+		<!-- /wp:comment-template -->
+		<!-- wp:post-comments-form /-->
+	</div>
+	<!-- /wp:comments -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"chiaroscuro"} /-->

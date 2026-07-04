@@ -1,0 +1,28 @@
+<!-- wp:template-part {"slug":"header","theme":"chiaroscuro"} /-->
+
+<!-- wp:group {"tagName":"main","className":"chiaroscuro-main chiaroscuro-home"} -->
+<main class="wp-block-group chiaroscuro-main chiaroscuro-home">
+	<!-- wp:query-title {"type":"search","className":"chiaroscuro-archive-title"} /-->
+	<!-- wp:search {"label":"Search","showLabel":false,"placeholder":"Search","buttonText":"Search","className":"chiaroscuro-search-form"} /-->
+	<!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"className":"chiaroscuro-river"} -->
+	<div class="wp-block-query chiaroscuro-river">
+		<!-- wp:post-template -->
+			<!-- wp:group {"className":"chiaroscuro-river-row"} -->
+			<div class="wp-block-group chiaroscuro-river-row">
+				<!-- wp:post-date {"format":"M j"} /-->
+				<!-- wp:post-title {"isLink":true,"level":2} /-->
+				<!-- wp:post-featured-image {"isLink":true} /-->
+			</div>
+			<!-- /wp:group -->
+		<!-- /wp:post-template -->
+		<!-- wp:query-no-results -->
+			<!-- wp:paragraph -->
+			<p>No results.</p>
+			<!-- /wp:paragraph -->
+		<!-- /wp:query-no-results -->
+	</div>
+	<!-- /wp:query -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"chiaroscuro"} /-->
