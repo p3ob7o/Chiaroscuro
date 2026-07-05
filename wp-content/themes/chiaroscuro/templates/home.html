@@ -1,0 +1,61 @@
+<!-- wp:template-part {"slug":"header","theme":"chiaroscuro"} /-->
+
+<!-- wp:group {"tagName":"main","className":"chiaroscuro-main chiaroscuro-home"} -->
+<main class="wp-block-group chiaroscuro-main chiaroscuro-home">
+	<!-- wp:pattern {"slug":"chiaroscuro/intro"} /-->
+
+	<!-- wp:group {"tagName":"section","className":"chiaroscuro-latest"} -->
+	<section class="wp-block-group chiaroscuro-latest">
+		<!-- wp:query {"queryId":1,"query":{"perPage":1,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":false}} -->
+		<div class="wp-block-query">
+			<!-- wp:post-template -->
+				<!-- wp:group {"tagName":"article","className":"chiaroscuro-latest-card"} -->
+				<article class="wp-block-group chiaroscuro-latest-card">
+					<!-- wp:group {"className":"chiaroscuro-section-heading","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"baseline"}} -->
+					<div class="wp-block-group chiaroscuro-section-heading">
+						<!-- wp:paragraph {"className":"chiaroscuro-section-label"} -->
+						<p class="chiaroscuro-section-label">Latest</p>
+						<!-- /wp:paragraph -->
+						<!-- wp:post-date {"format":"M j, Y"} /-->
+					</div>
+					<!-- /wp:group -->
+					<!-- wp:post-title {"isLink":true,"level":2} /-->
+					<!-- wp:post-excerpt {"moreText":""} /-->
+					<!-- wp:read-more {"content":"read the post  →","className":"chiaroscuro-read-more"} /-->
+				</article>
+				<!-- /wp:group -->
+			<!-- /wp:post-template -->
+		</div>
+		<!-- /wp:query -->
+	</section>
+	<!-- /wp:group -->
+
+	<!-- wp:pattern {"slug":"chiaroscuro/most-read"} /-->
+
+	<!-- wp:group {"tagName":"section","className":"chiaroscuro-river"} -->
+	<section class="wp-block-group chiaroscuro-river">
+		<!-- wp:query {"queryId":2,"query":{"perPage":10,"pages":0,"offset":1,"postType":"post","order":"desc","orderBy":"date","inherit":false},"namespace":"chiaroscuro-river"} -->
+		<div class="wp-block-query">
+			<!-- wp:post-template -->
+				<!-- wp:group {"className":"chiaroscuro-river-row"} -->
+				<div class="wp-block-group chiaroscuro-river-row">
+					<!-- wp:post-date {"format":"M j"} /-->
+					<!-- wp:post-title {"isLink":true,"level":2} /-->
+					<!-- wp:post-featured-image {"isLink":true} /-->
+				</div>
+				<!-- /wp:group -->
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-pagination {"className":"chiaroscuro-pagination","paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"}} -->
+				<!-- wp:query-pagination-previous {"label":"newer posts"} /-->
+				<!-- wp:query-pagination-numbers /-->
+				<!-- wp:query-pagination-next {"label":"older posts"} /-->
+			<!-- /wp:query-pagination -->
+		</div>
+		<!-- /wp:query -->
+	</section>
+	<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","theme":"chiaroscuro"} /-->
