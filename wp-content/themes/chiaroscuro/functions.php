@@ -23,6 +23,7 @@ add_filter( 'comment_text', 'chiaroscuro_normalize_comment_smilies', 99 );
 add_filter( 'render_block_core/navigation', 'chiaroscuro_render_navigation', 10, 2 );
 add_filter( 'render_block_core/navigation-link', 'chiaroscuro_render_navigation_link', 10, 2 );
 add_filter( 'render_block_core/post-featured-image', 'chiaroscuro_render_featured_image_caption', 10, 2 );
+add_filter( 'render_block_core/query', 'chiaroscuro_render_river_query', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_related_query', 10, 2 );
 
 /**
@@ -278,6 +279,205 @@ function chiaroscuro_related_query_vars( array $query, WP_Block $block, int $pag
 	$query['order']               = 'DESC';
 
 	return $query;
+}
+
+/**
+ * Render the homepage post river with year group markers.
+ *
+ * @param string $content Rendered block content.
+ * @param array  $block   Parsed block.
+ * @return string
+ */
+function chiaroscuro_render_river_query( string $content, array $block ): string {
+	$namespace = $block['attrs']['namespace'] ?? '';
+
+	if ( 'chiaroscuro-river' !== $namespace ) {
+		return $content;
+	}
+
+	$query_attrs = $block['attrs']['query'] ?? array();
+	$per_page    = max( 1, absint( $query_attrs['perPage'] ?? 10 ) );
+	$base_offset = max( 0, absint( $query_attrs['offset'] ?? 0 ) );
+	$post_type   = $query_attrs['postType'] ?? 'post';
+	$order       = $query_attrs['order'] ?? 'desc';
+	$order_by    = $query_attrs['orderBy'] ?? 'date';
+	$query_id    = isset( $block['attrs']['queryId'] ) ? absint( $block['attrs']['queryId'] ) : 0;
+	$page_key    = $query_id ? 'query-' . $query_id . '-page' : 'query-page';
+	$current     = filter_input( INPUT_GET, $page_key, FILTER_VALIDATE_INT );
+	$current     = is_int( $current ) && $current > 0 ? $current : 1;
+	$offset      = $base_offset + ( ( $current - 1 ) * $per_page );
+
+	$river = new WP_Query(
+		array(
+			'post_type'           => is_string( $post_type ) && '' !== $post_type ? $post_type : 'post',
+			'post_status'         => 'publish',
+			'posts_per_page'      => $per_page,
+			'offset'              => $offset,
+			'ignore_sticky_posts' => true,
+			'orderby'             => is_string( $order_by ) && '' !== $order_by ? $order_by : 'date',
+			'order'               => 'asc' === strtolower( (string) $order ) ? 'ASC' : 'DESC',
+		)
+	);
+
+	if ( ! $river->have_posts() ) {
+		return '<div class="wp-block-query chiaroscuro-river__query"><p>' . esc_html__( 'No posts found.', 'chiaroscuro' ) . '</p></div>';
+	}
+
+	ob_start();
+	?>
+	<div class="wp-block-query chiaroscuro-river__query">
+		<?php
+		$active_year = '';
+		$is_first    = true;
+
+		while ( $river->have_posts() ) :
+			$river->the_post();
+			$post_year = get_the_date( 'Y' );
+
+			if ( $post_year !== $active_year ) :
+				if ( '' !== $active_year ) :
+					?>
+					</ul>
+					</div>
+					<?php
+				endif;
+
+				$active_year = $post_year;
+				?>
+				<div class="chiaroscuro-river-group">
+					<div class="chiaroscuro-section-heading chiaroscuro-river-year-heading">
+						<?php if ( $is_first ) : ?>
+							<p class="chiaroscuro-section-label"><?php esc_html_e( 'All articles', 'chiaroscuro' ); ?></p>
+						<?php else : ?>
+							<span class="chiaroscuro-river-year-spacer" aria-hidden="true"></span>
+						<?php endif; ?>
+						<time class="chiaroscuro-river-year" datetime="<?php echo esc_attr( $post_year ); ?>"><?php echo esc_html( $post_year ); ?></time>
+					</div>
+					<ul class="wp-block-post-template">
+				<?php
+				$is_first = false;
+			endif;
+
+			$thumbnail_label = sprintf(
+				/* translators: %s: post title. */
+				__( 'Read %s', 'chiaroscuro' ),
+				get_the_title()
+			);
+			?>
+			<li <?php post_class( 'wp-block-post' ); ?>>
+				<div class="wp-block-group chiaroscuro-river-row">
+					<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j' ) ); ?></time></div>
+					<h2 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h2>
+					<?php if ( has_post_thumbnail() ) : ?>
+						<figure class="wp-block-post-featured-image">
+							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium' ); ?></a>
+						</figure>
+					<?php endif; ?>
+				</div>
+			</li>
+			<?php
+		endwhile;
+		wp_reset_postdata();
+		?>
+			</ul>
+		</div>
+		<?php echo wp_kses_post( chiaroscuro_render_river_pagination( $river, $current, $per_page, $base_offset, $page_key ) ); ?>
+	</div>
+	<?php
+
+	return (string) ob_get_clean();
+}
+
+/**
+ * Render pagination for the homepage post river.
+ *
+ * @param WP_Query $river       Homepage river query.
+ * @param int      $current     Current query page.
+ * @param int      $per_page    Posts per page.
+ * @param int      $base_offset Initial query offset.
+ * @param string   $page_key    Query pagination key.
+ * @return string
+ */
+function chiaroscuro_render_river_pagination( WP_Query $river, int $current, int $per_page, int $base_offset, string $page_key ): string {
+	$total_posts = max( 0, (int) $river->found_posts - $base_offset );
+	$total_pages = (int) ceil( $total_posts / $per_page );
+
+	if ( $total_pages < 2 ) {
+		return '';
+	}
+
+	$pagination_placeholder = 999999999;
+	$pagination_base        = str_replace(
+		(string) $pagination_placeholder,
+		'%#%',
+		esc_url_raw( add_query_arg( $page_key, $pagination_placeholder, chiaroscuro_get_current_url_without_query_page( $page_key ) ) )
+	);
+	$number_links           = paginate_links(
+		array(
+			'base'      => $pagination_base,
+			'current'   => $current,
+			'end_size'  => 1,
+			'format'    => '',
+			'mid_size'  => 1,
+			'prev_next' => false,
+			'total'     => $total_pages,
+			'type'      => 'array',
+		)
+	);
+
+	ob_start();
+	?>
+	<nav class="wp-block-query-pagination chiaroscuro-pagination" aria-label="<?php esc_attr_e( 'Posts pagination', 'chiaroscuro' ); ?>">
+		<?php if ( $current > 1 ) : ?>
+			<a href="<?php echo esc_url( chiaroscuro_get_river_page_url( $page_key, $current - 1 ) ); ?>"><?php esc_html_e( 'newer posts', 'chiaroscuro' ); ?></a>
+		<?php else : ?>
+			<span class="chiaroscuro-pagination__spacer" aria-hidden="true"></span>
+		<?php endif; ?>
+
+		<?php if ( is_array( $number_links ) ) : ?>
+			<div class="wp-block-query-pagination-numbers">
+				<?php echo wp_kses_post( implode( "\n", $number_links ) ); ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $current < $total_pages ) : ?>
+			<a href="<?php echo esc_url( chiaroscuro_get_river_page_url( $page_key, $current + 1 ) ); ?>"><?php esc_html_e( 'older posts', 'chiaroscuro' ); ?></a>
+		<?php else : ?>
+			<span class="chiaroscuro-pagination__spacer" aria-hidden="true"></span>
+		<?php endif; ?>
+	</nav>
+	<?php
+
+	return (string) ob_get_clean();
+}
+
+/**
+ * Get the current URL without a specific query pagination argument.
+ *
+ * @param string $page_key Query pagination key.
+ * @return string
+ */
+function chiaroscuro_get_current_url_without_query_page( string $page_key ): string {
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+
+	return remove_query_arg( $page_key, home_url( $request_uri ) );
+}
+
+/**
+ * Build a URL for a river page.
+ *
+ * @param string $page_key Query pagination key.
+ * @param int    $page     Target page.
+ * @return string
+ */
+function chiaroscuro_get_river_page_url( string $page_key, int $page ): string {
+	$url = chiaroscuro_get_current_url_without_query_page( $page_key );
+
+	if ( $page > 1 ) {
+		$url = add_query_arg( $page_key, $page, $url );
+	}
+
+	return $url;
 }
 
 /**

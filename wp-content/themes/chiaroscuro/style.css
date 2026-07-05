@@ -3,7 +3,7 @@ Theme Name: Chiaroscuro
 Description: A grayscale, typography-first child theme for Twenty Twenty-Five.
 Author: Paolo
 Template: twentytwentyfive
-Version: 0.1.4
+Version: 0.1.5
 Text Domain: chiaroscuro
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -447,6 +447,22 @@ a {
 
 .chiaroscuro-river .wp-block-post-template {
 	margin-top: 10px !important;
+}
+
+.chiaroscuro-river-group + .chiaroscuro-river-group {
+	margin-top: 24px;
+}
+
+.chiaroscuro-river-year {
+	color: var(--chiaroscuro-muted-text);
+	font-family: var(--wp--preset--font-family--ibm-plex-mono);
+	font-size: 11px;
+	letter-spacing: 0.1em;
+	line-height: 1.4;
+}
+
+.chiaroscuro-river-year-spacer {
+	min-width: 1px;
 }
 
 .chiaroscuro-river .wp-block-post {
