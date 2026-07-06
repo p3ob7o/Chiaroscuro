@@ -8,6 +8,8 @@
 add_action( 'after_setup_theme', 'chiaroscuro_setup' );
 add_action( 'wp_enqueue_scripts', 'chiaroscuro_enqueue_styles' );
 add_action( 'wp_head', 'chiaroscuro_print_theme_boot_script', 0 );
+add_action( 'wp_head', 'chiaroscuro_print_newsreader_font_faces', 1 );
+add_action( 'admin_head', 'chiaroscuro_print_newsreader_font_faces' );
 add_action( 'init', 'chiaroscuro_register_blocks' );
 add_action( 'init', 'chiaroscuro_register_pattern_category' );
 add_action( 'init', 'chiaroscuro_unregister_non_theme_patterns', 100 );
@@ -65,6 +67,33 @@ function chiaroscuro_print_theme_boot_script(): void {
 	<script>
 	(function(){try{var k='pb-theme',t=localStorage.getItem(k);if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}}());
 	</script>
+	<?php
+}
+
+/**
+ * Prefer installed Newsreader before falling back to the bundled webfont.
+ */
+function chiaroscuro_print_newsreader_font_faces(): void {
+	$normal_url = get_theme_file_uri( 'assets/fonts/newsreader/Newsreader-Variable.woff2' );
+	$italic_url = get_theme_file_uri( 'assets/fonts/newsreader/Newsreader-Italic-Variable.woff2' );
+	?>
+	<style id="chiaroscuro-newsreader-font-face">
+	@font-face {
+		font-family: "Newsreader";
+		font-style: normal;
+		font-weight: 200 800;
+		font-display: swap;
+		src: local("Newsreader"), local("Newsreader Variable"), local("Newsreader Regular"), local("Newsreader-Regular"), url("<?php echo esc_url( $normal_url ); ?>") format("woff2");
+	}
+
+	@font-face {
+		font-family: "Newsreader";
+		font-style: italic;
+		font-weight: 200 800;
+		font-display: swap;
+		src: local("Newsreader Italic"), local("Newsreader-Italic"), local("Newsreader Italic Variable"), local("Newsreader Variable Italic"), url("<?php echo esc_url( $italic_url ); ?>") format("woff2");
+	}
+	</style>
 	<?php
 }
 

@@ -114,26 +114,6 @@
 				},
 				{
 					"fontFamily": "Newsreader, Palatino, Serif",
-					"fontFace": [
-						{
-							"fontDisplay": "swap",
-							"fontFamily": "Newsreader",
-							"fontStyle": "normal",
-							"fontWeight": "200 800",
-							"src": [
-								"file:./assets/fonts/newsreader/Newsreader-Variable.woff2"
-							]
-						},
-						{
-							"fontDisplay": "swap",
-							"fontFamily": "Newsreader",
-							"fontStyle": "italic",
-							"fontWeight": "200 800",
-							"src": [
-								"file:./assets/fonts/newsreader/Newsreader-Italic-Variable.woff2"
-							]
-						}
-					],
 					"name": "Newsreader",
 					"slug": "newsreader"
 				},
