@@ -3,7 +3,7 @@ Theme Name: Chiaroscuro
 Description: A grayscale, typography-first child theme for Twenty Twenty-Five.
 Author: Paolo
 Template: twentytwentyfive
-Version: 0.1.6
+Version: 0.1.7
 Text Domain: chiaroscuro
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,14 +18,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 	--chiaroscuro-muted-text: #5A5A5A;
 }
 
-@font-face {
-	ascent-override: 92%;
-	descent-override: 22%;
-	font-family: "Archivo Fallback";
-	line-gap-override: 0%;
-	size-adjust: 100%;
-	src: local("Helvetica Neue"), local("Helvetica"), local("Arial");
-}
+/* Sans stack policy: use "Helvetica Neue", Helvetica, sans-serif. Never ever add Arial. */
 
 html[data-theme="dark"] {
 	color-scheme: dark;
@@ -151,7 +144,7 @@ a {
 .chiaroscuro-brand .wp-block-site-title,
 .chiaroscuro-brand .wp-block-site-title a {
 	color: var(--wp--preset--color--ink);
-	font-family: var(--wp--preset--font-family--archivo);
+	font-family: var(--wp--preset--font-family--helvetica-neue);
 	font-size: 18px;
 	font-weight: 620;
 	letter-spacing: -0.02em;
@@ -432,7 +425,7 @@ a {
 
 .chiaroscuro-most-read__title,
 .chiaroscuro-row-title {
-	font-family: var(--wp--preset--font-family--archivo);
+	font-family: var(--wp--preset--font-family--helvetica-neue);
 	font-size: 16.5px;
 	font-weight: 560;
 	letter-spacing: -0.012em;
@@ -607,7 +600,7 @@ a {
 .chiaroscuro-post-content h2,
 .chiaroscuro-post-content h3,
 .chiaroscuro-post-content h4 {
-	font-family: var(--wp--preset--font-family--archivo);
+	font-family: var(--wp--preset--font-family--helvetica-neue);
 	letter-spacing: -0.018em;
 	line-height: 1.2;
 	margin-block-start: 2.2em;
@@ -745,7 +738,7 @@ a {
 	color: var(--wp--preset--color--ink);
 	display: flex;
 	flex-direction: column;
-	font-family: var(--wp--preset--font-family--archivo);
+	font-family: var(--wp--preset--font-family--helvetica-neue);
 	font-size: 15.5px;
 	font-weight: 560;
 	gap: 8px;
@@ -817,7 +810,7 @@ a {
 .wp-block-comment-author-name,
 .wp-block-comment-author-name a {
 	color: var(--wp--preset--color--ink);
-	font-family: var(--wp--preset--font-family--archivo);
+	font-family: var(--wp--preset--font-family--helvetica-neue);
 	font-size: 15px;
 	font-weight: 600;
 	letter-spacing: -0.01em;
@@ -963,7 +956,7 @@ a {
 
 .chiaroscuro-about-lead {
 	color: var(--wp--preset--color--ink-2);
-	font-family: var(--wp--preset--font-family--archivo);
+	font-family: var(--wp--preset--font-family--helvetica-neue);
 	font-size: 17px;
 	font-weight: 480;
 	letter-spacing: -0.008em;
@@ -1055,7 +1048,7 @@ a {
 
 .chiaroscuro-footer__name {
 	color: var(--wp--preset--color--ink);
-	font-family: var(--wp--preset--font-family--archivo);
+	font-family: var(--wp--preset--font-family--helvetica-neue);
 	font-size: 15px;
 	font-weight: 600;
 	letter-spacing: -0.01em;

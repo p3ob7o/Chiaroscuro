@@ -108,20 +108,9 @@
 			"fluid": true,
 			"fontFamilies": [
 				{
-					"fontFamily": "Archivo, 'Archivo Fallback', 'Helvetica Neue', Helvetica, sans-serif",
-					"fontFace": [
-						{
-							"fontDisplay": "swap",
-							"fontFamily": "Archivo",
-							"fontStyle": "normal",
-							"fontWeight": "100 900",
-							"src": [
-								"file:./assets/fonts/archivo/Archivo-Variable.woff2"
-							]
-						}
-					],
-					"name": "Archivo",
-					"slug": "archivo"
+					"fontFamily": "\"Helvetica Neue\", Helvetica, sans-serif",
+					"name": "Helvetica Neue",
+					"slug": "helvetica-neue"
 				},
 				{
 					"fontFamily": "Newsreader, 'Iowan Old Style', Georgia, serif",
@@ -276,7 +265,7 @@
 			},
 			"h1": {
 				"typography": {
-					"fontFamily": "var:preset|font-family|archivo",
+					"fontFamily": "var:preset|font-family|helvetica-neue",
 					"fontSize": "var:preset|font-size|post-title",
 					"fontWeight": "680",
 					"letterSpacing": "-0.032em",
@@ -285,7 +274,7 @@
 			},
 			"h2": {
 				"typography": {
-					"fontFamily": "var:preset|font-family|archivo",
+					"fontFamily": "var:preset|font-family|helvetica-neue",
 					"fontSize": "var:preset|font-size|featured",
 					"fontWeight": "640",
 					"letterSpacing": "-0.028em",
@@ -294,7 +283,7 @@
 			},
 			"h3": {
 				"typography": {
-					"fontFamily": "var:preset|font-family|archivo",
+					"fontFamily": "var:preset|font-family|helvetica-neue",
 					"fontSize": "22px",
 					"fontWeight": "620",
 					"letterSpacing": "-0.018em",
@@ -306,7 +295,7 @@
 					"text": "var:preset|color|ink"
 				},
 				"typography": {
-					"fontFamily": "var:preset|font-family|archivo"
+					"fontFamily": "var:preset|font-family|helvetica-neue"
 				}
 			},
 			"link": {
