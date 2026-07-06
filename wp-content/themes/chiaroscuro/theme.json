@@ -113,7 +113,7 @@
 					"slug": "helvetica-neue"
 				},
 				{
-					"fontFamily": "Newsreader, 'Iowan Old Style', Georgia, serif",
+					"fontFamily": "Newsreader, Palatino, Serif",
 					"fontFace": [
 						{
 							"fontDisplay": "swap",
