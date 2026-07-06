@@ -108,7 +108,7 @@
 			"fluid": true,
 			"fontFamilies": [
 				{
-					"fontFamily": "Archivo, 'Helvetica Neue', Helvetica, sans-serif",
+					"fontFamily": "Archivo, 'Archivo Fallback', 'Helvetica Neue', Helvetica, sans-serif",
 					"fontFace": [
 						{
 							"fontDisplay": "swap",

@@ -7,6 +7,7 @@
 
 add_action( 'after_setup_theme', 'chiaroscuro_setup' );
 add_action( 'wp_enqueue_scripts', 'chiaroscuro_enqueue_styles' );
+add_action( 'wp_head', 'chiaroscuro_preload_critical_fonts', 0 );
 add_action( 'wp_head', 'chiaroscuro_print_theme_boot_script', 0 );
 add_action( 'init', 'chiaroscuro_register_blocks' );
 add_action( 'init', 'chiaroscuro_register_pattern_category' );
@@ -55,6 +56,15 @@ function chiaroscuro_enqueue_styles(): void {
 	);
 
 	wp_enqueue_script( 'chiaroscuro-theme-toggle' );
+}
+
+/**
+ * Preload the homepage heading font to reduce first-paint reflow.
+ */
+function chiaroscuro_preload_critical_fonts(): void {
+	?>
+	<link rel="preload" href="<?php echo esc_url( get_theme_file_uri( 'assets/fonts/archivo/Archivo-Variable.woff2' ) ); ?>" as="font" type="font/woff2" crossorigin>
+	<?php
 }
 
 /**
