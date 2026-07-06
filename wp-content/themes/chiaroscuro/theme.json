@@ -239,8 +239,7 @@
 				"typography": {
 					"fontFamily": "var:preset|font-family|ibm-plex-mono",
 					"fontSize": "11.5px",
-					"letterSpacing": "0.04em",
-					"lineHeight": "1.5"
+					"letterSpacing": "0.04em"
 				}
 			},
 			"h1": {
@@ -248,8 +247,7 @@
 					"fontFamily": "var:preset|font-family|helvetica-neue",
 					"fontSize": "var:preset|font-size|post-title",
 					"fontWeight": "680",
-					"letterSpacing": "-0.032em",
-					"lineHeight": "1.02"
+					"letterSpacing": "-0.032em"
 				}
 			},
 			"h2": {
@@ -257,8 +255,7 @@
 					"fontFamily": "var:preset|font-family|helvetica-neue",
 					"fontSize": "var:preset|font-size|featured",
 					"fontWeight": "640",
-					"letterSpacing": "-0.028em",
-					"lineHeight": "1.06"
+					"letterSpacing": "-0.028em"
 				}
 			},
 			"h3": {
@@ -266,8 +263,7 @@
 					"fontFamily": "var:preset|font-family|helvetica-neue",
 					"fontSize": "22px",
 					"fontWeight": "620",
-					"letterSpacing": "-0.018em",
-					"lineHeight": "1.25"
+					"letterSpacing": "-0.018em"
 				}
 			},
 			"heading": {
@@ -306,8 +302,7 @@
 				},
 				"typography": {
 					"fontFamily": "var:preset|font-family|ibm-plex-mono",
-					"fontSize": "14px",
-					"lineHeight": "1.6"
+					"fontSize": "14px"
 				}
 			},
 			"core/post-date": {
@@ -317,8 +312,7 @@
 				"typography": {
 					"fontFamily": "var:preset|font-family|ibm-plex-mono",
 					"fontSize": "11px",
-					"letterSpacing": "0.1em",
-					"lineHeight": "1.4"
+					"letterSpacing": "0.1em"
 				}
 			},
 			"core/separator": {
