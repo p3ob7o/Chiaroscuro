@@ -79,19 +79,35 @@ function chiaroscuro_print_newsreader_font_faces(): void {
 	?>
 	<style id="chiaroscuro-newsreader-font-face">
 	@font-face {
-		font-family: "Newsreader";
+		font-family: "Chiaroscuro Newsreader";
 		font-style: normal;
 		font-weight: 200 800;
 		font-display: swap;
-		src: local("Newsreader"), local("Newsreader Variable"), local("Newsreader Regular"), local("Newsreader-Regular"), url("<?php echo esc_url( $normal_url ); ?>") format("woff2");
+		src:
+			local("Newsreader 16pt Regular"),
+			local("Newsreader16pt-Regular"),
+			local("Newsreader 24pt Regular"),
+			local("Newsreader24pt-Regular"),
+			local("Newsreader Regular"),
+			local("Newsreader-Regular"),
+			local("Newsreader"),
+			url("<?php echo esc_url( $normal_url ); ?>") format("woff2");
 	}
 
 	@font-face {
-		font-family: "Newsreader";
+		font-family: "Chiaroscuro Newsreader";
 		font-style: italic;
 		font-weight: 200 800;
 		font-display: swap;
-		src: local("Newsreader Italic"), local("Newsreader-Italic"), local("Newsreader Italic Variable"), local("Newsreader Variable Italic"), url("<?php echo esc_url( $italic_url ); ?>") format("woff2");
+		src:
+			local("Newsreader 16pt Italic"),
+			local("Newsreader16pt-Italic"),
+			local("Newsreader 24pt Italic"),
+			local("Newsreader24pt-Italic"),
+			local("Newsreader Italic"),
+			local("Newsreader-Italic"),
+			local("Newsreader"),
+			url("<?php echo esc_url( $italic_url ); ?>") format("woff2");
 	}
 	</style>
 	<?php
