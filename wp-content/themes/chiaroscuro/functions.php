@@ -69,7 +69,6 @@ function chiaroscuro_enqueue_styles(): void {
 function chiaroscuro_optimize_frontend_assets(): void {
 	$defer_handles = array(
 		'iawm-link-fixer-front-link-checker',
-		'jetpack-carousel',
 		'no-orphan-words',
 		'wp-dom-ready',
 		'wp-polyfill',
@@ -81,14 +80,25 @@ function chiaroscuro_optimize_frontend_assets(): void {
 		}
 	}
 
-	$unused_style_handles = array(
-		'jetpack-carousel',
-		'jetpack-swiper-library',
-		'tiled-gallery',
-	);
+	if ( is_home() || is_front_page() ) {
+		$unused_style_handles = array(
+			'jetpack-carousel',
+			'jetpack-swiper-library',
+			'tiled-gallery',
+		);
 
-	foreach ( $unused_style_handles as $handle ) {
-		wp_dequeue_style( $handle );
+		$unused_script_handles = array(
+			'jetpack-carousel',
+			'tiled-gallery',
+		);
+
+		foreach ( $unused_style_handles as $handle ) {
+			wp_dequeue_style( $handle );
+		}
+
+		foreach ( $unused_script_handles as $handle ) {
+			wp_dequeue_script( $handle );
+		}
 	}
 
 	if ( ! is_search() ) {
