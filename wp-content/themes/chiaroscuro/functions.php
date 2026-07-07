@@ -28,6 +28,7 @@ add_filter( 'render_block_core/navigation-link', 'chiaroscuro_render_navigation_
 add_filter( 'render_block_core/post-featured-image', 'chiaroscuro_render_featured_image_caption', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_river_query', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_related_query', 10, 2 );
+add_filter( 'script_loader_tag', 'chiaroscuro_defer_frontend_script_tag', 10, 3 );
 
 /**
  * Configure theme support.
@@ -84,6 +85,29 @@ function chiaroscuro_optimize_frontend_assets(): void {
 	}
 
 	wp_dequeue_script( 'jp-tracks' );
+}
+
+/**
+ * Force defer on dependency handles that do not receive strategy attributes.
+ *
+ * @param string $tag    Script tag markup.
+ * @param string $handle Script handle.
+ * @param string $src    Script source URL.
+ * @return string
+ */
+function chiaroscuro_defer_frontend_script_tag( string $tag, string $handle, string $src ): string {
+	unset( $src );
+
+	$defer_handles = array(
+		'wp-dom-ready',
+		'wp-polyfill',
+	);
+
+	if ( is_admin() || ! in_array( $handle, $defer_handles, true ) || preg_match( '/\s(?:async|defer)(?:\s|=|>)/', $tag ) ) {
+		return $tag;
+	}
+
+	return str_replace( '<script ', '<script defer ', $tag );
 }
 
 /**
