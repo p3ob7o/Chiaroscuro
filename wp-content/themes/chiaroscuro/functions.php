@@ -85,6 +85,7 @@ function chiaroscuro_optimize_frontend_assets(): void {
 	}
 
 	wp_dequeue_script( 'jp-tracks' );
+	remove_action( 'wp_footer', 'gauges', 99 );
 }
 
 /**
