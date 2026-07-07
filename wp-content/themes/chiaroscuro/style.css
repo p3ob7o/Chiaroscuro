@@ -9,13 +9,34 @@ License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
+/*--------------------------------------------------------------
+>>> TABLE OF CONTENTS:
+----------------------------------------------------------------
+# Custom Properties
+# Base Elements
+# Accessibility
+# Header and Navigation
+# Main Layout
+# Homepage
+# Post Lists
+# Single Posts
+# Comments
+# About Page
+# Footer
+# Archives and Search
+# Responsive
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Custom Properties
+--------------------------------------------------------------*/
 :root {
 	color-scheme: light;
 	--chiaroscuro-header: 1100px;
 	--chiaroscuro-home: 760px;
 	--chiaroscuro-about: 1000px;
 	--chiaroscuro-gutter: 32px;
-	--chiaroscuro-muted-text: #5A5A5A;
+	--chiaroscuro-muted-text: #5a5a5a;
 }
 
 /* Sans stack policy: use "Helvetica Neue", Helvetica, sans-serif. Never ever add Arial. */
@@ -23,14 +44,17 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 html[data-theme="dark"] {
 	color-scheme: dark;
 	--wp--preset--color--base: #111111;
-	--wp--preset--color--ink: #ECECEC;
-	--wp--preset--color--ink-2: #A6A6A6;
+	--wp--preset--color--ink: #ececec;
+	--wp--preset--color--ink-2: #a6a6a6;
 	--wp--preset--color--ink-3: #737373;
-	--wp--preset--color--line: #2A2A2A;
-	--wp--preset--color--surface: #1B1B1B;
-	--chiaroscuro-muted-text: #A6A6A6;
+	--wp--preset--color--line: #2a2a2a;
+	--wp--preset--color--surface: #1b1b1b;
+	--chiaroscuro-muted-text: #a6a6a6;
 }
 
+/*--------------------------------------------------------------
+# Base Elements
+--------------------------------------------------------------*/
 html {
 	background: var(--wp--preset--color--base);
 	color-scheme: light;
@@ -101,6 +125,9 @@ a {
 	outline-offset: 4px;
 }
 
+/*--------------------------------------------------------------
+# Accessibility
+--------------------------------------------------------------*/
 .screen-reader-text {
 	border: 0;
 	clip: rect(1px, 1px, 1px, 1px);
@@ -114,6 +141,9 @@ a {
 	word-wrap: normal;
 }
 
+/*--------------------------------------------------------------
+# Header and Navigation
+--------------------------------------------------------------*/
 .chiaroscuro-site-header {
 	align-items: baseline;
 	display: flex;
@@ -219,6 +249,9 @@ a {
 	border-color: var(--wp--preset--color--ink-3);
 }
 
+/*--------------------------------------------------------------
+# Main Layout
+--------------------------------------------------------------*/
 .chiaroscuro-theme-toggle__glyph {
 	border: 1px solid currentColor;
 	border-radius: 50%;
@@ -261,6 +294,9 @@ a {
 	padding-right: 0;
 }
 
+/*--------------------------------------------------------------
+# Homepage
+--------------------------------------------------------------*/
 .chiaroscuro-intro {
 	padding: 104px 0 72px;
 }
@@ -379,6 +415,7 @@ a {
 	padding-bottom: 2px;
 }
 
+/* WordPress block layout classes need scoped overrides to preserve template spacing. */
 .chiaroscuro-read-more {
 	display: inline-block;
 	margin-top: 18px !important;
@@ -390,6 +427,9 @@ a {
 	border-color: var(--wp--preset--color--ink);
 }
 
+/*--------------------------------------------------------------
+# Post Lists
+--------------------------------------------------------------*/
 .chiaroscuro-most-read {
 	border-top: 1px solid var(--wp--preset--color--line);
 	padding: 24px 0 36px;
@@ -511,6 +551,9 @@ a {
 	gap: 12px;
 }
 
+/*--------------------------------------------------------------
+# Single Posts
+--------------------------------------------------------------*/
 .chiaroscuro-post-article {
 	counter-reset: chiaroscuro-fig;
 	padding-top: 96px;
@@ -750,6 +793,9 @@ a {
 	text-transform: uppercase;
 }
 
+/*--------------------------------------------------------------
+# Comments
+--------------------------------------------------------------*/
 .chiaroscuro-comments {
 	margin-top: 80px !important;
 }
@@ -899,6 +945,9 @@ a {
 	opacity: 0.82;
 }
 
+/*--------------------------------------------------------------
+# About Page
+--------------------------------------------------------------*/
 .chiaroscuro-about-grid {
 	align-items: start;
 	display: grid;
@@ -1002,6 +1051,9 @@ a {
 	text-underline-offset: 5px;
 }
 
+/*--------------------------------------------------------------
+# Footer
+--------------------------------------------------------------*/
 .chiaroscuro-footer {
 	border-top: 1px solid var(--wp--preset--color--line);
 	margin-top: 120px;
@@ -1045,6 +1097,9 @@ a {
 	text-underline-offset: 3px;
 }
 
+/*--------------------------------------------------------------
+# Archives and Search
+--------------------------------------------------------------*/
 .chiaroscuro-archive-title,
 .chiaroscuro-404-title {
 	font-size: clamp(34px, 4.6vw, 46px);
@@ -1063,6 +1118,9 @@ a {
 	padding: 12px 16px;
 }
 
+/*--------------------------------------------------------------
+# Responsive
+--------------------------------------------------------------*/
 @media (max-width: 700px) {
 	:root {
 		--chiaroscuro-gutter: 24px;

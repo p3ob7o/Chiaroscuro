@@ -13,7 +13,7 @@
 	function storedTheme() {
 		try {
 			return localStorage.getItem( key );
-		} catch (error) {
+		} catch {
 			return null;
 		}
 	}
@@ -21,21 +21,25 @@
 	function preferredTheme() {
 		var stored = storedTheme();
 
-		if (stored === 'dark' || stored === 'light') {
+		if ( stored === 'dark' || stored === 'light' ) {
 			return stored;
 		}
 
-		return window.matchMedia && window.matchMedia( '(prefers-color-scheme: dark)' ).matches ? 'dark' : 'light';
+		if ( window.matchMedia && window.matchMedia( '(prefers-color-scheme: dark)' ).matches ) {
+			return 'dark';
+		}
+
+		return 'light';
 	}
 
-	function applyTheme(theme) {
+	function applyTheme( theme ) {
 		var isDark = theme === 'dark';
 
 		root.dataset.theme     = theme;
 		root.style.colorScheme = theme;
 
 		document.querySelectorAll( '.wp-block-chiaroscuro-theme-toggle' ).forEach(
-			function (button) {
+			function ( button ) {
 				button.setAttribute( 'aria-pressed', isDark ? 'true' : 'false' );
 			}
 		);
@@ -45,10 +49,10 @@
 
 	document.addEventListener(
 		'click',
-		function (event) {
+		function ( event ) {
 			var button = event.target.closest( '.wp-block-chiaroscuro-theme-toggle' );
 
-			if ( ! button) {
+			if ( ! button ) {
 				return;
 			}
 
@@ -56,7 +60,8 @@
 
 			try {
 				localStorage.setItem( key, next );
-			} catch (error) {
+			} catch {
+				// Ignore storage access errors; the current page can still update.
 			}
 
 			applyTheme( next );

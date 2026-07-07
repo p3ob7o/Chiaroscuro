@@ -4,12 +4,14 @@
  * @package Chiaroscuro
  */
 
-(function (wp) {
+(function ( wp ) {
 	'use strict';
 
-	if ( ! wp || ! wp.blocks || ! wp.domReady) {
+	if ( ! wp || ! wp.blocks || ! wp.domReady || ! wp.i18n ) {
 		return;
 	}
+
+	var __ = wp.i18n.__;
 
 	wp.domReady(
 		function () {
@@ -17,27 +19,27 @@
 				'core/query',
 				{
 					name: 'chiaroscuro-related-by-tag',
-					title: 'Chiaroscuro related posts',
-					description: 'Posts sharing the current post tags.',
+					title: __( 'Chiaroscuro related posts', 'chiaroscuro' ),
+					description: __( 'Posts sharing the current post tags.', 'chiaroscuro' ),
 					icon: 'tag',
 					attributes: {
 						namespace: 'chiaroscuro-related',
 						query: {
-							perPage: 4,
-							pages: 0,
+							inherit: false,
 							offset: 0,
-							postType: 'post',
 							order: 'desc',
 							orderBy: 'date',
-							inherit: false
-						}
+							pages: 0,
+							perPage: 4,
+							postType: 'post',
+						},
 					},
-					scope: ['inserter', 'transform'],
-					isActive: function (blockAttributes) {
+					scope: [ 'inserter', 'transform' ],
+					isActive: function ( blockAttributes ) {
 						return blockAttributes.namespace === 'chiaroscuro-related';
-					}
+					},
 				}
 			);
 		}
 	);
-}(window.wp));
+}( window.wp ));
