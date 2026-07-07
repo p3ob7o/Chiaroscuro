@@ -7,8 +7,11 @@
 
 add_action( 'after_setup_theme', 'chiaroscuro_setup' );
 add_action( 'wp_enqueue_scripts', 'chiaroscuro_enqueue_styles' );
+add_action( 'wp_enqueue_scripts', 'chiaroscuro_optimize_frontend_assets', 1000 );
 add_action( 'wp_head', 'chiaroscuro_print_theme_boot_script', 0 );
 add_action( 'wp_head', 'chiaroscuro_print_newsreader_font_faces', 1 );
+add_action( 'wp_head', 'chiaroscuro_preload_mono_fonts', 1 );
+add_action( 'wp_footer', 'chiaroscuro_start_footer_performance_buffer', 0 );
 add_action( 'admin_head', 'chiaroscuro_print_newsreader_font_faces' );
 add_action( 'init', 'chiaroscuro_register_blocks' );
 add_action( 'init', 'chiaroscuro_register_pattern_category' );
@@ -27,12 +30,15 @@ add_filter( 'render_block_core/navigation-link', 'chiaroscuro_render_navigation_
 add_filter( 'render_block_core/post-featured-image', 'chiaroscuro_render_featured_image_caption', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_river_query', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_related_query', 10, 2 );
+add_filter( 'style_loader_tag', 'chiaroscuro_defer_frontend_style_tag', 10, 4 );
+add_filter( 'script_loader_tag', 'chiaroscuro_defer_frontend_script_tag', 10, 3 );
 
 /**
  * Configure theme support.
  */
 function chiaroscuro_setup(): void {
 	add_editor_style( 'style.css' );
+	add_image_size( 'chiaroscuro-river-thumbnail', 104, 132, true );
 }
 
 /**
@@ -40,13 +46,20 @@ function chiaroscuro_setup(): void {
  */
 function chiaroscuro_enqueue_styles(): void {
 	$theme = wp_get_theme();
+	$css   = chiaroscuro_get_stylesheet_contents();
 
-	wp_enqueue_style(
-		'chiaroscuro-style',
-		get_stylesheet_uri(),
-		array(),
-		$theme->get( 'Version' )
-	);
+	if ( '' !== $css ) {
+		wp_register_style( 'chiaroscuro-style', false, array(), $theme->get( 'Version' ) );
+		wp_enqueue_style( 'chiaroscuro-style' );
+		wp_add_inline_style( 'chiaroscuro-style', $css );
+	} else {
+		wp_enqueue_style(
+			'chiaroscuro-style',
+			get_stylesheet_uri(),
+			array(),
+			$theme->get( 'Version' )
+		);
+	}
 
 	wp_register_script(
 		'chiaroscuro-theme-toggle',
@@ -57,6 +70,238 @@ function chiaroscuro_enqueue_styles(): void {
 	);
 
 	wp_enqueue_script( 'chiaroscuro-theme-toggle' );
+}
+
+/**
+ * Read the child theme stylesheet for inline frontend delivery.
+ *
+ * @return string
+ */
+function chiaroscuro_get_stylesheet_contents(): string {
+	$stylesheet_path = get_stylesheet_directory() . '/style.css';
+
+	if ( ! is_readable( $stylesheet_path ) ) {
+		return '';
+	}
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local theme stylesheet read avoids a render-blocking frontend request.
+	$css = file_get_contents( $stylesheet_path );
+
+	return is_string( $css ) ? $css : '';
+}
+
+/**
+ * Preload mono UI fonts that are needed in the first viewport.
+ */
+function chiaroscuro_preload_mono_fonts(): void {
+	$font_files = array(
+		'assets/fonts/ibm-plex-mono/IBMPlexMono-Regular.woff2',
+		'assets/fonts/ibm-plex-mono/IBMPlexMono-Medium.woff2',
+	);
+
+	foreach ( $font_files as $font_file ) {
+		printf(
+			'<link rel="preload" href="%1$s" as="font" type="font/woff2" crossorigin>' . "\n",
+			esc_url( get_theme_file_uri( $font_file ) )
+		);
+	}
+}
+
+/**
+ * Trim non-visual frontend asset work that PageSpeed reports on read views.
+ */
+function chiaroscuro_optimize_frontend_assets(): void {
+	$defer_handles = array(
+		'iawm-link-fixer-front-link-checker',
+		'no-orphan-words',
+		'wp-dom-ready',
+		'wp-polyfill',
+	);
+
+	foreach ( $defer_handles as $handle ) {
+		if ( wp_script_is( $handle, 'enqueued' ) ) {
+			wp_script_add_data( $handle, 'strategy', 'defer' );
+		}
+	}
+
+	if ( is_home() || is_front_page() ) {
+		$unused_style_handles = array(
+			'jetpack-carousel',
+			'jetpack-swiper-library',
+			'tiled-gallery',
+		);
+
+		$unused_script_handles = array(
+			'jetpack-carousel',
+			'tiled-gallery',
+		);
+
+		foreach ( $unused_style_handles as $handle ) {
+			wp_dequeue_style( $handle );
+		}
+
+		foreach ( $unused_script_handles as $handle ) {
+			wp_dequeue_script( $handle );
+		}
+	}
+
+	if ( ! is_search() ) {
+		wp_dequeue_style( 'jetpack-instant-search' );
+		wp_dequeue_script( 'jetpack-instant-search' );
+	}
+
+	wp_dequeue_script( 'jp-tracks' );
+	remove_action( 'wp_footer', 'gauges', 99 );
+}
+
+/**
+ * Force defer on dependency handles that do not receive strategy attributes.
+ *
+ * @param string $tag    Script tag markup.
+ * @param string $handle Script handle.
+ * @param string $src    Script source URL.
+ * @return string
+ */
+function chiaroscuro_defer_frontend_script_tag( string $tag, string $handle, string $src ): string {
+	unset( $src );
+
+	$defer_handles = array(
+		'wp-dom-ready',
+		'wp-polyfill',
+	);
+
+	if ( is_admin() || ! in_array( $handle, $defer_handles, true ) || preg_match( '/\s(?:async|defer)(?:\s|=|>)/', $tag ) ) {
+		return $tag;
+	}
+
+	return str_replace( '<script ', '<script defer ', $tag );
+}
+
+/**
+ * Load non-critical subscription styles without blocking first paint.
+ *
+ * @param string $html   Link tag markup.
+ * @param string $handle Style handle.
+ * @param string $href   Stylesheet URL.
+ * @param string $media  Stylesheet media attribute.
+ * @return string
+ */
+function chiaroscuro_defer_frontend_style_tag( string $html, string $handle, string $href, string $media ): string {
+	$defer_handles = array(
+		'jetpack-block-subscriptions',
+		'subscribe-floating-button-css',
+	);
+
+	if ( is_admin() || ! in_array( $handle, $defer_handles, true ) || '' === $href ) {
+		return $html;
+	}
+
+	$media = '' !== $media ? $media : 'all';
+
+	$deferred = sprintf(
+		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- This rewrites an already-enqueued stylesheet tag.
+		'<link rel="stylesheet" id="%1$s-css" href="%2$s" media="print" onload="this.media=%3$s" />',
+		esc_attr( $handle ),
+		esc_url( $href ),
+		esc_attr( wp_json_encode( $media ) )
+	);
+
+	$fallback = sprintf(
+		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Noscript fallback for the already-enqueued async stylesheet.
+		'<noscript><link rel="stylesheet" id="%1$s-css-noscript" href="%2$s" media="%3$s" /></noscript>',
+		esc_attr( $handle ),
+		esc_url( $href ),
+		esc_attr( $media )
+	);
+
+	return $deferred . $fallback;
+}
+
+/**
+ * Start a scoped footer buffer so third-party snippets can be filtered safely.
+ */
+function chiaroscuro_start_footer_performance_buffer(): void {
+	if ( is_admin() || wp_doing_ajax() || wp_is_json_request() ) {
+		return;
+	}
+
+	ob_start( 'chiaroscuro_filter_footer_performance_markup' );
+}
+
+/**
+ * Remove non-visual footer snippets whose assets are intentionally skipped.
+ *
+ * @param string $markup Footer markup.
+ * @param int    $phase  Output buffering phase.
+ * @return string
+ */
+function chiaroscuro_filter_footer_performance_markup( string $markup, int $phase = 0 ): string {
+	unset( $phase );
+
+	if ( str_contains( $markup, 'gauges-tracker' ) && str_contains( $markup, 'secure.gaug.es/track.js' ) ) {
+		$filtered = preg_replace(
+			'#\s*<script\b[^>]*>(?:(?!</script>).)*gauges-tracker(?:(?!</script>).)*secure\.gaug\.es/track\.js(?:(?!</script>).)*</script>#s',
+			'',
+			$markup,
+			1
+		);
+
+		$markup = is_string( $filtered ) ? $filtered : $markup;
+	}
+
+	if ( str_contains( $markup, 'jp-carousel-loading-overlay' ) ) {
+		$filtered = preg_replace(
+			'#\s*<div id="jp-carousel-loading-overlay">.*?(?=\s*(?:<link\b|<script\b|</body>))#s',
+			'',
+			$markup,
+			1
+		);
+
+		$markup = is_string( $filtered ) ? $filtered : $markup;
+	}
+
+	return $markup;
+}
+
+/**
+ * Render a tightly sized thumbnail for the homepage river.
+ *
+ * @param int $attachment_id Featured image attachment ID.
+ * @return string
+ */
+function chiaroscuro_render_river_thumbnail( int $attachment_id ): string {
+	$size = 'chiaroscuro-river-thumbnail';
+
+	chiaroscuro_ensure_attachment_image_size( $attachment_id, $size );
+
+	return wp_get_attachment_image(
+		$attachment_id,
+		$size,
+		false,
+		array(
+			'sizes' => '52px',
+		)
+	);
+}
+
+/**
+ * Generate a registered image sub-size for existing uploads when it is missing.
+ *
+ * @param int    $attachment_id Attachment ID.
+ * @param string $size          Registered image size name.
+ */
+function chiaroscuro_ensure_attachment_image_size( int $attachment_id, string $size ): void {
+	if ( image_get_intermediate_size( $attachment_id, $size ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'wp_update_image_subsizes' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
+
+	if ( function_exists( 'wp_update_image_subsizes' ) ) {
+		wp_update_image_subsizes( $attachment_id );
+	}
 }
 
 /**
@@ -428,14 +673,15 @@ function chiaroscuro_render_river_query( string $content, array $block ): string
 				__( 'Read %s', 'chiaroscuro' ),
 				get_the_title()
 			);
+			$thumbnail_id = get_post_thumbnail_id();
 			?>
 			<li <?php post_class( 'wp-block-post' ); ?>>
 				<div class="wp-block-group chiaroscuro-river-row">
 					<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j' ) ); ?></time></div>
 					<h2 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h2>
-					<?php if ( has_post_thumbnail() ) : ?>
+					<?php if ( $thumbnail_id ) : ?>
 						<figure class="wp-block-post-featured-image">
-							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium' ); ?></a>
+							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php echo wp_kses_post( chiaroscuro_render_river_thumbnail( $thumbnail_id ) ); ?></a>
 						</figure>
 					<?php endif; ?>
 				</div>
