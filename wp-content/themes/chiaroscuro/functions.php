@@ -145,7 +145,7 @@ function chiaroscuro_start_footer_performance_buffer(): void {
 }
 
 /**
- * Remove the Gauges tracker snippet whose third-party cache lifetime is fixed.
+ * Remove non-visual footer snippets whose assets are intentionally skipped.
  *
  * @param string $markup Footer markup.
  * @param int    $phase  Output buffering phase.
@@ -154,18 +154,29 @@ function chiaroscuro_start_footer_performance_buffer(): void {
 function chiaroscuro_filter_footer_performance_markup( string $markup, int $phase = 0 ): string {
 	unset( $phase );
 
-	if ( ! str_contains( $markup, 'gauges-tracker' ) || ! str_contains( $markup, 'secure.gaug.es/track.js' ) ) {
-		return $markup;
+	if ( str_contains( $markup, 'gauges-tracker' ) && str_contains( $markup, 'secure.gaug.es/track.js' ) ) {
+		$filtered = preg_replace(
+			'#\s*<script\b[^>]*>(?:(?!</script>).)*gauges-tracker(?:(?!</script>).)*secure\.gaug\.es/track\.js(?:(?!</script>).)*</script>#s',
+			'',
+			$markup,
+			1
+		);
+
+		$markup = is_string( $filtered ) ? $filtered : $markup;
 	}
 
-	$filtered = preg_replace(
-		'#\s*<script\b[^>]*>(?:(?!</script>).)*gauges-tracker(?:(?!</script>).)*secure\.gaug\.es/track\.js(?:(?!</script>).)*</script>#s',
-		'',
-		$markup,
-		1
-	);
+	if ( str_contains( $markup, 'jp-carousel-loading-overlay' ) ) {
+		$filtered = preg_replace(
+			'#\s*<div id="jp-carousel-loading-overlay">.*?(?=\s*(?:<link\b|<script\b|</body>))#s',
+			'',
+			$markup,
+			1
+		);
 
-	return is_string( $filtered ) ? $filtered : $markup;
+		$markup = is_string( $filtered ) ? $filtered : $markup;
+	}
+
+	return $markup;
 }
 
 /**
