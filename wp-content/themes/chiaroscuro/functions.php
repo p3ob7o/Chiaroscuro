@@ -7,6 +7,7 @@
 
 add_action( 'after_setup_theme', 'chiaroscuro_setup' );
 add_action( 'wp_enqueue_scripts', 'chiaroscuro_enqueue_styles' );
+add_action( 'wp_enqueue_scripts', 'chiaroscuro_optimize_frontend_assets', 1000 );
 add_action( 'wp_head', 'chiaroscuro_print_theme_boot_script', 0 );
 add_action( 'wp_head', 'chiaroscuro_print_newsreader_font_faces', 1 );
 add_action( 'admin_head', 'chiaroscuro_print_newsreader_font_faces' );
@@ -57,6 +58,32 @@ function chiaroscuro_enqueue_styles(): void {
 	);
 
 	wp_enqueue_script( 'chiaroscuro-theme-toggle' );
+}
+
+/**
+ * Trim non-visual frontend asset work that PageSpeed reports on read views.
+ */
+function chiaroscuro_optimize_frontend_assets(): void {
+	$defer_handles = array(
+		'iawm-link-fixer-front-link-checker',
+		'jetpack-carousel',
+		'no-orphan-words',
+		'wp-dom-ready',
+		'wp-polyfill',
+	);
+
+	foreach ( $defer_handles as $handle ) {
+		if ( wp_script_is( $handle, 'enqueued' ) ) {
+			wp_script_add_data( $handle, 'strategy', 'defer' );
+		}
+	}
+
+	if ( ! is_search() ) {
+		wp_dequeue_style( 'jetpack-instant-search' );
+		wp_dequeue_script( 'jetpack-instant-search' );
+	}
+
+	wp_dequeue_script( 'jp-tracks' );
 }
 
 /**
@@ -435,7 +462,7 @@ function chiaroscuro_render_river_query( string $content, array $block ): string
 					<h2 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h2>
 					<?php if ( has_post_thumbnail() ) : ?>
 						<figure class="wp-block-post-featured-image">
-							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium' ); ?></a>
+							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium', array( 'sizes' => '52px' ) ); ?></a>
 						</figure>
 					<?php endif; ?>
 				</div>
