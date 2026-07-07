@@ -65,7 +65,27 @@ function chiaroscuro_enqueue_styles(): void {
 function chiaroscuro_print_theme_boot_script(): void {
 	?>
 	<script>
-	(function(){try{var k='pb-theme',t=localStorage.getItem(k);if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t;}catch(e){document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}}());
+	(function () {
+		'use strict';
+
+		try {
+			var key = 'pb-theme';
+			var theme = localStorage.getItem( key );
+
+			if ( theme !== 'dark' && theme !== 'light' ) {
+				theme = window.matchMedia && window.matchMedia( '(prefers-color-scheme: dark)' ).matches
+					? 'dark'
+					: 'light';
+			}
+
+			document.documentElement.dataset.theme = theme;
+			document.documentElement.style.colorScheme = theme;
+		} catch {
+			// Fall back to light mode when storage or media queries are unavailable.
+			document.documentElement.dataset.theme = 'light';
+			document.documentElement.style.colorScheme = 'light';
+		}
+	}());
 	</script>
 	<?php
 }

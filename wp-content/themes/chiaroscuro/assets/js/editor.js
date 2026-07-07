@@ -4,10 +4,10 @@
  * @package Chiaroscuro
  */
 
-(function (wp) {
+(function ( wp ) {
 	'use strict';
 
-	if ( ! wp || ! wp.blocks || ! wp.domReady) {
+	if ( ! wp || ! wp.blocks || ! wp.domReady ) {
 		return;
 	}
 
@@ -23,21 +23,21 @@
 					attributes: {
 						namespace: 'chiaroscuro-related',
 						query: {
-							perPage: 4,
-							pages: 0,
+							inherit: false,
 							offset: 0,
-							postType: 'post',
 							order: 'desc',
 							orderBy: 'date',
-							inherit: false
-						}
+							pages: 0,
+							perPage: 4,
+							postType: 'post',
+						},
 					},
-					scope: ['inserter', 'transform'],
-					isActive: function (blockAttributes) {
+					scope: [ 'inserter', 'transform' ],
+					isActive: function ( blockAttributes ) {
 						return blockAttributes.namespace === 'chiaroscuro-related';
-					}
+					},
 				}
 			);
 		}
 	);
-}(window.wp));
+}( window.wp ));
