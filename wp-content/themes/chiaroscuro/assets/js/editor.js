@@ -7,9 +7,11 @@
 (function ( wp ) {
 	'use strict';
 
-	if ( ! wp || ! wp.blocks || ! wp.domReady ) {
+	if ( ! wp || ! wp.blocks || ! wp.domReady || ! wp.i18n ) {
 		return;
 	}
+
+	var __ = wp.i18n.__;
 
 	wp.domReady(
 		function () {
@@ -17,8 +19,8 @@
 				'core/query',
 				{
 					name: 'chiaroscuro-related-by-tag',
-					title: 'Chiaroscuro related posts',
-					description: 'Posts sharing the current post tags.',
+					title: __( 'Chiaroscuro related posts', 'chiaroscuro' ),
+					description: __( 'Posts sharing the current post tags.', 'chiaroscuro' ),
 					icon: 'tag',
 					attributes: {
 						namespace: 'chiaroscuro-related',

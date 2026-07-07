@@ -301,7 +301,7 @@ function chiaroscuro_enqueue_editor_assets(): void {
 		get_theme_file_uri( 'assets/js/editor.js' ),
 		array( 'wp-blocks', 'wp-dom-ready', 'wp-i18n' ),
 		wp_get_theme()->get( 'Version' ),
-		true
+		array( 'in_footer' => true )
 	);
 }
 
@@ -594,31 +594,31 @@ function chiaroscuro_render_related_query( string $content, array $block ): stri
 	?>
 	<div class="wp-block-query">
 		<ul class="wp-block-post-template">
-				<?php
-				while ( $related->have_posts() ) :
-					$related->the_post();
-					$thumbnail_label = sprintf(
-						/* translators: %s: post title. */
-						__( 'Read %s', 'chiaroscuro' ),
-						get_the_title()
-					);
-					?>
-					<li <?php post_class( 'wp-block-post' ); ?>>
-						<?php if ( has_post_thumbnail() ) : ?>
-							<figure class="wp-block-post-featured-image">
-								<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium_large' ); ?></a>
-							</figure>
-						<?php else : ?>
-							<div class="wp-block-post-featured-image chiaroscuro-related__placeholder" aria-hidden="true"></div>
-						<?php endif; ?>
-						<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y' ) ); ?></time></div>
+			<?php
+			while ( $related->have_posts() ) :
+				$related->the_post();
+				$thumbnail_label = sprintf(
+					/* translators: %s: post title. */
+					__( 'Read %s', 'chiaroscuro' ),
+					get_the_title()
+				);
+				?>
+				<li <?php post_class( 'wp-block-post' ); ?>>
+					<?php if ( has_post_thumbnail() ) : ?>
+						<figure class="wp-block-post-featured-image">
+							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium_large' ); ?></a>
+						</figure>
+					<?php else : ?>
+						<div class="wp-block-post-featured-image chiaroscuro-related__placeholder" aria-hidden="true"></div>
+					<?php endif; ?>
+					<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y' ) ); ?></time></div>
 					<h3 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h3>
 					<div class="wp-block-post-excerpt"><p class="wp-block-post-excerpt__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 12 ) ); ?></p></div>
 				</li>
-					<?php
+				<?php
 			endwhile;
-				wp_reset_postdata();
-				?>
+			wp_reset_postdata();
+			?>
 		</ul>
 	</div>
 	<?php
