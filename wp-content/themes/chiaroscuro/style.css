@@ -15,7 +15,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 	--chiaroscuro-home: 760px;
 	--chiaroscuro-about: 1000px;
 	--chiaroscuro-gutter: 32px;
-	--chiaroscuro-muted-text: #5A5A5A;
+	--chiaroscuro-muted-text: #5a5a5a;
 }
 
 /* Sans stack policy: use "Helvetica Neue", Helvetica, sans-serif. Never ever add Arial. */
@@ -23,12 +23,12 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 html[data-theme="dark"] {
 	color-scheme: dark;
 	--wp--preset--color--base: #111111;
-	--wp--preset--color--ink: #ECECEC;
-	--wp--preset--color--ink-2: #A6A6A6;
+	--wp--preset--color--ink: #ececec;
+	--wp--preset--color--ink-2: #a6a6a6;
 	--wp--preset--color--ink-3: #737373;
-	--wp--preset--color--line: #2A2A2A;
-	--wp--preset--color--surface: #1B1B1B;
-	--chiaroscuro-muted-text: #A6A6A6;
+	--wp--preset--color--line: #2a2a2a;
+	--wp--preset--color--surface: #1b1b1b;
+	--chiaroscuro-muted-text: #a6a6a6;
 }
 
 html {

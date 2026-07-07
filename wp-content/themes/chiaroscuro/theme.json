@@ -21,7 +21,7 @@
 			"link": true,
 			"palette": [
 				{
-					"color": "#FAFAFA",
+					"color": "#fafafa",
 					"name": "Base",
 					"slug": "base"
 				},
@@ -31,7 +31,7 @@
 					"slug": "ink"
 				},
 				{
-					"color": "#5A5A5A",
+					"color": "#5a5a5a",
 					"name": "Ink 2",
 					"slug": "ink-2"
 				},
@@ -41,12 +41,12 @@
 					"slug": "ink-3"
 				},
 				{
-					"color": "#E3E3E3",
+					"color": "#e3e3e3",
 					"name": "Line",
 					"slug": "line"
 				},
 				{
-					"color": "#F0F0F0",
+					"color": "#f0f0f0",
 					"name": "Surface",
 					"slug": "surface"
 				}
@@ -113,12 +113,12 @@
 					"slug": "helvetica-neue"
 				},
 				{
-					"fontFamily": "\"Chiaroscuro Newsreader\", Newsreader, Palatino, Serif",
+					"fontFamily": "\"Chiaroscuro Newsreader\", Newsreader, Palatino, serif",
 					"name": "Newsreader",
 					"slug": "newsreader"
 				},
 				{
-					"fontFamily": "'IBM Plex Mono', ui-monospace, Menlo, monospace",
+					"fontFamily": "\"IBM Plex Mono\", ui-monospace, Menlo, monospace",
 					"fontFace": [
 						{
 							"fontDisplay": "swap",
