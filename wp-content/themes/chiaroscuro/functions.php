@@ -10,6 +10,7 @@ add_action( 'wp_enqueue_scripts', 'chiaroscuro_enqueue_styles' );
 add_action( 'wp_enqueue_scripts', 'chiaroscuro_optimize_frontend_assets', 1000 );
 add_action( 'wp_head', 'chiaroscuro_print_theme_boot_script', 0 );
 add_action( 'wp_head', 'chiaroscuro_print_newsreader_font_faces', 1 );
+add_action( 'wp_footer', 'chiaroscuro_start_footer_performance_buffer', 0 );
 add_action( 'admin_head', 'chiaroscuro_print_newsreader_font_faces' );
 add_action( 'init', 'chiaroscuro_register_blocks' );
 add_action( 'init', 'chiaroscuro_register_pattern_category' );
@@ -109,6 +110,41 @@ function chiaroscuro_defer_frontend_script_tag( string $tag, string $handle, str
 	}
 
 	return str_replace( '<script ', '<script defer ', $tag );
+}
+
+/**
+ * Start a scoped footer buffer so third-party snippets can be filtered safely.
+ */
+function chiaroscuro_start_footer_performance_buffer(): void {
+	if ( is_admin() || wp_doing_ajax() || wp_is_json_request() ) {
+		return;
+	}
+
+	ob_start( 'chiaroscuro_filter_footer_performance_markup' );
+}
+
+/**
+ * Remove the Gauges tracker snippet whose third-party cache lifetime is fixed.
+ *
+ * @param string $markup Footer markup.
+ * @param int    $phase  Output buffering phase.
+ * @return string
+ */
+function chiaroscuro_filter_footer_performance_markup( string $markup, int $phase = 0 ): string {
+	unset( $phase );
+
+	if ( ! str_contains( $markup, 'gauges-tracker' ) || ! str_contains( $markup, 'secure.gaug.es/track.js' ) ) {
+		return $markup;
+	}
+
+	$filtered = preg_replace(
+		'#\s*<script\b[^>]*>(?:(?!</script>).)*gauges-tracker(?:(?!</script>).)*secure\.gaug\.es/track\.js(?:(?!</script>).)*</script>#s',
+		'',
+		$markup,
+		1
+	);
+
+	return is_string( $filtered ) ? $filtered : $markup;
 }
 
 /**
