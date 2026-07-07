@@ -10,6 +10,7 @@ add_action( 'wp_enqueue_scripts', 'chiaroscuro_enqueue_styles' );
 add_action( 'wp_enqueue_scripts', 'chiaroscuro_optimize_frontend_assets', 1000 );
 add_action( 'wp_head', 'chiaroscuro_print_theme_boot_script', 0 );
 add_action( 'wp_head', 'chiaroscuro_print_newsreader_font_faces', 1 );
+add_action( 'wp_head', 'chiaroscuro_preload_mono_fonts', 1 );
 add_action( 'wp_footer', 'chiaroscuro_start_footer_performance_buffer', 0 );
 add_action( 'admin_head', 'chiaroscuro_print_newsreader_font_faces' );
 add_action( 'init', 'chiaroscuro_register_blocks' );
@@ -87,6 +88,23 @@ function chiaroscuro_get_stylesheet_contents(): string {
 	$css = file_get_contents( $stylesheet_path );
 
 	return is_string( $css ) ? $css : '';
+}
+
+/**
+ * Preload mono UI fonts that are needed in the first viewport.
+ */
+function chiaroscuro_preload_mono_fonts(): void {
+	$font_files = array(
+		'assets/fonts/ibm-plex-mono/IBMPlexMono-Regular.woff2',
+		'assets/fonts/ibm-plex-mono/IBMPlexMono-Medium.woff2',
+	);
+
+	foreach ( $font_files as $font_file ) {
+		printf(
+			'<link rel="preload" href="%1$s" as="font" type="font/woff2" crossorigin>' . "\n",
+			esc_url( get_theme_file_uri( $font_file ) )
+		);
+	}
 }
 
 /**
