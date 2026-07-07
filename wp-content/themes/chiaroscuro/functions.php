@@ -36,6 +36,7 @@ add_filter( 'script_loader_tag', 'chiaroscuro_defer_frontend_script_tag', 10, 3 
  */
 function chiaroscuro_setup(): void {
 	add_editor_style( 'style.css' );
+	add_image_size( 'chiaroscuro-river-thumbnail', 104, 132, true );
 }
 
 /**
@@ -78,6 +79,16 @@ function chiaroscuro_optimize_frontend_assets(): void {
 		if ( wp_script_is( $handle, 'enqueued' ) ) {
 			wp_script_add_data( $handle, 'strategy', 'defer' );
 		}
+	}
+
+	$unused_style_handles = array(
+		'jetpack-carousel',
+		'jetpack-swiper-library',
+		'tiled-gallery',
+	);
+
+	foreach ( $unused_style_handles as $handle ) {
+		wp_dequeue_style( $handle );
 	}
 
 	if ( ! is_search() ) {
@@ -145,6 +156,47 @@ function chiaroscuro_filter_footer_performance_markup( string $markup, int $phas
 	);
 
 	return is_string( $filtered ) ? $filtered : $markup;
+}
+
+/**
+ * Render a tightly sized thumbnail for the homepage river.
+ *
+ * @param int $attachment_id Featured image attachment ID.
+ * @return string
+ */
+function chiaroscuro_render_river_thumbnail( int $attachment_id ): string {
+	$size = 'chiaroscuro-river-thumbnail';
+
+	chiaroscuro_ensure_attachment_image_size( $attachment_id, $size );
+
+	return wp_get_attachment_image(
+		$attachment_id,
+		$size,
+		false,
+		array(
+			'sizes' => '52px',
+		)
+	);
+}
+
+/**
+ * Generate a registered image sub-size for existing uploads when it is missing.
+ *
+ * @param int    $attachment_id Attachment ID.
+ * @param string $size          Registered image size name.
+ */
+function chiaroscuro_ensure_attachment_image_size( int $attachment_id, string $size ): void {
+	if ( image_get_intermediate_size( $attachment_id, $size ) ) {
+		return;
+	}
+
+	if ( ! function_exists( 'wp_update_image_subsizes' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
+
+	if ( function_exists( 'wp_update_image_subsizes' ) ) {
+		wp_update_image_subsizes( $attachment_id );
+	}
 }
 
 /**
@@ -516,14 +568,15 @@ function chiaroscuro_render_river_query( string $content, array $block ): string
 				__( 'Read %s', 'chiaroscuro' ),
 				get_the_title()
 			);
+			$thumbnail_id = get_post_thumbnail_id();
 			?>
 			<li <?php post_class( 'wp-block-post' ); ?>>
 				<div class="wp-block-group chiaroscuro-river-row">
 					<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j' ) ); ?></time></div>
 					<h2 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h2>
-					<?php if ( has_post_thumbnail() ) : ?>
+					<?php if ( $thumbnail_id ) : ?>
 						<figure class="wp-block-post-featured-image">
-							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php the_post_thumbnail( 'medium', array( 'sizes' => '52px' ) ); ?></a>
+							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php echo wp_kses_post( chiaroscuro_render_river_thumbnail( $thumbnail_id ) ); ?></a>
 						</figure>
 					<?php endif; ?>
 				</div>
