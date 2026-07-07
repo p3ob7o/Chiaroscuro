@@ -29,6 +29,7 @@ add_filter( 'render_block_core/navigation-link', 'chiaroscuro_render_navigation_
 add_filter( 'render_block_core/post-featured-image', 'chiaroscuro_render_featured_image_caption', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_river_query', 10, 2 );
 add_filter( 'render_block_core/query', 'chiaroscuro_render_related_query', 10, 2 );
+add_filter( 'style_loader_tag', 'chiaroscuro_defer_frontend_style_tag', 10, 4 );
 add_filter( 'script_loader_tag', 'chiaroscuro_defer_frontend_script_tag', 10, 3 );
 
 /**
@@ -44,13 +45,20 @@ function chiaroscuro_setup(): void {
  */
 function chiaroscuro_enqueue_styles(): void {
 	$theme = wp_get_theme();
+	$css   = chiaroscuro_get_stylesheet_contents();
 
-	wp_enqueue_style(
-		'chiaroscuro-style',
-		get_stylesheet_uri(),
-		array(),
-		$theme->get( 'Version' )
-	);
+	if ( '' !== $css ) {
+		wp_register_style( 'chiaroscuro-style', false, array(), $theme->get( 'Version' ) );
+		wp_enqueue_style( 'chiaroscuro-style' );
+		wp_add_inline_style( 'chiaroscuro-style', $css );
+	} else {
+		wp_enqueue_style(
+			'chiaroscuro-style',
+			get_stylesheet_uri(),
+			array(),
+			$theme->get( 'Version' )
+		);
+	}
 
 	wp_register_script(
 		'chiaroscuro-theme-toggle',
@@ -61,6 +69,24 @@ function chiaroscuro_enqueue_styles(): void {
 	);
 
 	wp_enqueue_script( 'chiaroscuro-theme-toggle' );
+}
+
+/**
+ * Read the child theme stylesheet for inline frontend delivery.
+ *
+ * @return string
+ */
+function chiaroscuro_get_stylesheet_contents(): string {
+	$stylesheet_path = get_stylesheet_directory() . '/style.css';
+
+	if ( ! is_readable( $stylesheet_path ) ) {
+		return '';
+	}
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local theme stylesheet read avoids a render-blocking frontend request.
+	$css = file_get_contents( $stylesheet_path );
+
+	return is_string( $css ) ? $css : '';
 }
 
 /**
@@ -131,6 +157,46 @@ function chiaroscuro_defer_frontend_script_tag( string $tag, string $handle, str
 	}
 
 	return str_replace( '<script ', '<script defer ', $tag );
+}
+
+/**
+ * Load non-critical subscription styles without blocking first paint.
+ *
+ * @param string $html   Link tag markup.
+ * @param string $handle Style handle.
+ * @param string $href   Stylesheet URL.
+ * @param string $media  Stylesheet media attribute.
+ * @return string
+ */
+function chiaroscuro_defer_frontend_style_tag( string $html, string $handle, string $href, string $media ): string {
+	$defer_handles = array(
+		'jetpack-block-subscriptions',
+		'subscribe-floating-button-css',
+	);
+
+	if ( is_admin() || ! in_array( $handle, $defer_handles, true ) || '' === $href ) {
+		return $html;
+	}
+
+	$media = '' !== $media ? $media : 'all';
+
+	$deferred = sprintf(
+		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- This rewrites an already-enqueued stylesheet tag.
+		'<link rel="stylesheet" id="%1$s-css" href="%2$s" media="print" onload="this.media=%3$s" />',
+		esc_attr( $handle ),
+		esc_url( $href ),
+		esc_attr( wp_json_encode( $media ) )
+	);
+
+	$fallback = sprintf(
+		// phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- Noscript fallback for the already-enqueued async stylesheet.
+		'<noscript><link rel="stylesheet" id="%1$s-css-noscript" href="%2$s" media="%3$s" /></noscript>',
+		esc_attr( $handle ),
+		esc_url( $href ),
+		esc_attr( $media )
+	);
+
+	return $deferred . $fallback;
 }
 
 /**
