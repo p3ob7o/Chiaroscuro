@@ -32,13 +32,36 @@ add_filter( 'render_block_core/query', 'chiaroscuro_render_river_query', 10, 2 )
 add_filter( 'render_block_core/query', 'chiaroscuro_render_related_query', 10, 2 );
 add_filter( 'style_loader_tag', 'chiaroscuro_defer_frontend_style_tag', 10, 4 );
 add_filter( 'script_loader_tag', 'chiaroscuro_defer_frontend_script_tag', 10, 3 );
+add_filter( 'block_editor_settings_all', 'chiaroscuro_editor_content_settings', 10, 2 );
 
 /**
  * Configure theme support.
  */
 function chiaroscuro_setup(): void {
+	add_theme_support( 'editor-styles' );
 	add_editor_style( 'style.css' );
 	add_image_size( 'chiaroscuro-river-thumbnail', 104, 132, true );
+}
+
+/**
+ * Mirror frontend post-content rhythm in the post editor canvas.
+ *
+ * @param array                   $editor_settings Editor settings.
+ * @param WP_Block_Editor_Context $editor_context  Editor context.
+ * @return array
+ */
+function chiaroscuro_editor_content_settings( array $editor_settings, WP_Block_Editor_Context $editor_context ): array {
+	$post = $editor_context->post ?? null;
+
+	if ( ! $post instanceof WP_Post || ! in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
+		return $editor_settings;
+	}
+
+	$editor_settings['styles'][] = array(
+		'css' => '.is-root-container > .wp-block:not(.wp-block-post-title) + .wp-block:not(.wp-block-post-title) { margin-block-start: 1.35em; }',
+	);
+
+	return $editor_settings;
 }
 
 /**
