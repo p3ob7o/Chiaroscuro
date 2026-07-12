@@ -156,14 +156,50 @@
 				{
 					"fluid": false,
 					"name": "Caption",
-					"size": "11px",
+					"size": "11.5px",
 					"slug": "caption"
+				},
+				{
+					"fluid": false,
+					"name": "Label",
+					"size": "11px",
+					"slug": "label"
+				},
+				{
+					"fluid": false,
+					"name": "Meta",
+					"size": "12px",
+					"slug": "meta"
+				},
+				{
+					"fluid": false,
+					"name": "Action",
+					"size": "12px",
+					"slug": "action"
+				},
+				{
+					"fluid": false,
+					"name": "Small Paragraph",
+					"size": "17px",
+					"slug": "small-paragraph"
+				},
+				{
+					"fluid": false,
+					"name": "Lead",
+					"size": "17px",
+					"slug": "lead"
 				},
 				{
 					"fluid": false,
 					"name": "Body",
 					"size": "20px",
 					"slug": "body"
+				},
+				{
+					"fluid": false,
+					"name": "Compact Title",
+					"size": "16px",
+					"slug": "compact-title"
 				},
 				{
 					"fluid": false,
@@ -264,6 +300,31 @@
 					"fontSize": "22px",
 					"fontWeight": "620",
 					"letterSpacing": "-0.018em"
+				}
+			},
+			"h4": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|helvetica-neue",
+					"fontSize": "var:preset|font-size|compact-title",
+					"fontWeight": "560",
+					"letterSpacing": "-0.012em"
+				}
+			},
+			"h5": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|ibm-plex-mono",
+					"fontSize": "var:preset|font-size|label",
+					"fontWeight": "400",
+					"letterSpacing": "0.16em",
+					"textTransform": "uppercase"
+				}
+			},
+			"h6": {
+				"typography": {
+					"fontFamily": "var:preset|font-family|ibm-plex-mono",
+					"fontSize": "var:preset|font-size|meta",
+					"fontWeight": "400",
+					"letterSpacing": "0.1em"
 				}
 			},
 			"heading": {
