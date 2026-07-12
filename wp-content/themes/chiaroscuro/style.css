@@ -1050,12 +1050,14 @@ a {
 	gap: 12px;
 }
 
-.chiaroscuro-footer__name {
-	color: var(--wp--preset--color--ink);
-}
-
 .chiaroscuro-footer__meta {
 	color: var(--chiaroscuro-muted-text);
+}
+
+.chiaroscuro-footer__heart {
+	display: inline-block;
+	line-height: 1;
+	vertical-align: -0.08em;
 }
 
 .chiaroscuro-footer__meta a {
