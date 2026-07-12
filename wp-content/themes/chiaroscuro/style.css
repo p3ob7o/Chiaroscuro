@@ -3,7 +3,7 @@ Theme Name: Chiaroscuro
 Description: A grayscale, typography-first child theme for Twenty Twenty-Five.
 Author: Paolo
 Template: twentytwentyfive
-Version: 0.1.17
+Version: 0.1.18
 Text Domain: chiaroscuro
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -32,11 +32,11 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 --------------------------------------------------------------*/
 :root {
 	color-scheme: light;
-	--chiaroscuro-header: 1100px;
-	--chiaroscuro-home: 760px;
-	--chiaroscuro-about: 1000px;
+	--chiaroscuro-content: var(--wp--style--global--content-size);
+	--chiaroscuro-wide: var(--wp--style--global--wide-size);
 	--chiaroscuro-gutter: 32px;
 	--chiaroscuro-muted-text: #5a5a5a;
+	--chiaroscuro-wide-viewport: min(calc(100vw - var(--chiaroscuro-gutter) - var(--chiaroscuro-gutter)), var(--chiaroscuro-wide));
 }
 
 /* Sans stack policy: use "Helvetica Neue", Helvetica, sans-serif. Never ever add Arial. */
@@ -250,7 +250,7 @@ a {
 	gap: 18px 28px;
 	justify-content: space-between;
 	margin: 0 auto;
-	max-width: var(--chiaroscuro-header);
+	max-width: calc(var(--chiaroscuro-wide) + var(--chiaroscuro-gutter) + var(--chiaroscuro-gutter));
 	padding: 30px var(--chiaroscuro-gutter) 0;
 	width: 100%;
 }
@@ -360,24 +360,12 @@ a {
 .chiaroscuro-main {
 	flex: 1;
 	margin: 0 auto;
+	max-width: calc(var(--chiaroscuro-content) + var(--chiaroscuro-gutter) + var(--chiaroscuro-gutter));
 	padding: 0 var(--chiaroscuro-gutter);
 	width: 100%;
 }
 
-.chiaroscuro-home {
-	max-width: var(--chiaroscuro-home);
-}
-
-.chiaroscuro-post-main {
-	max-width: var(--wp--style--global--content-size);
-	overflow-x: clip;
-}
-
-.chiaroscuro-page-main {
-	max-width: var(--chiaroscuro-about);
-}
-
-.chiaroscuro-page-main .entry-content.has-global-padding {
+.wp-block-post-content.has-global-padding {
 	padding-left: 0;
 	padding-right: 0;
 }
@@ -633,11 +621,7 @@ a {
 
 .chiaroscuro-post-hero {
 	counter-increment: chiaroscuro-fig;
-	left: 50%;
 	margin: 56px 0 0 !important;
-	position: relative;
-	transform: translateX(-50%);
-	width: min(92vw, var(--wp--style--global--wide-size));
 }
 
 .chiaroscuro-post-hero img {
@@ -650,6 +634,16 @@ a {
 
 .chiaroscuro-post-content {
 	margin-top: 48px !important;
+}
+
+.wp-block-post-content > .alignwide {
+	left: 50%;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	max-width: none !important;
+	position: relative;
+	transform: translateX(-50%);
+	width: var(--chiaroscuro-wide-viewport);
 }
 
 .chiaroscuro-post-content > * {
@@ -723,13 +717,6 @@ a {
 	display: none;
 }
 
-.chiaroscuro-wide-band {
-	left: 50%;
-	position: relative;
-	transform: translateX(-50%);
-	width: min(92vw, var(--wp--style--global--wide-size));
-}
-
 .chiaroscuro-related__head {
 	border-top: 1px solid var(--wp--preset--color--ink);
 	padding-top: 22px;
@@ -738,7 +725,7 @@ a {
 .chiaroscuro-related .wp-block-post-template {
 	display: grid;
 	gap: 14px;
-	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 	margin-top: 22px !important;
 }
 
@@ -1052,7 +1039,7 @@ a {
 	gap: 36px;
 	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 	margin: 0 auto;
-	max-width: var(--chiaroscuro-header);
+	max-width: calc(var(--chiaroscuro-wide) + var(--chiaroscuro-gutter) + var(--chiaroscuro-gutter));
 	padding: 46px var(--chiaroscuro-gutter) 60px;
 	width: 100%;
 }
@@ -1103,7 +1090,8 @@ a {
 --------------------------------------------------------------*/
 @media (max-width: 700px) {
 	:root {
-		--chiaroscuro-gutter: 24px;
+		--chiaroscuro-gutter: 4vw;
+		--chiaroscuro-wide-viewport: 100%;
 	}
 
 	.chiaroscuro-about-grid,
@@ -1128,16 +1116,6 @@ a {
 		grid-template-columns: 1fr;
 	}
 
-	.chiaroscuro-post-main {
-		padding-left: 4vw;
-		padding-right: 4vw;
-	}
-
-	.chiaroscuro-post-content.has-global-padding {
-		padding-left: 0;
-		padding-right: 0;
-	}
-
 	.chiaroscuro-post-navigation .post-navigation-link-previous {
 		border-bottom: 1px solid var(--wp--preset--color--line);
 		border-right: 0;
@@ -1152,10 +1130,6 @@ a {
 }
 
 @media (max-width: 420px) {
-	:root {
-		--chiaroscuro-gutter: 20px;
-	}
-
 	.chiaroscuro-site-header {
 		gap: 16px;
 	}
