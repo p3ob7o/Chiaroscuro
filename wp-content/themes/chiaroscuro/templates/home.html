@@ -13,15 +13,15 @@
 				<article class="wp-block-group chiaroscuro-latest-card">
 					<!-- wp:group {"className":"chiaroscuro-section-heading","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"baseline"}} -->
 					<div class="wp-block-group chiaroscuro-section-heading">
-						<!-- wp:paragraph {"className":"chiaroscuro-section-label"} -->
-						<p class="chiaroscuro-section-label">Latest</p>
+						<!-- wp:paragraph {"className":"chiaroscuro-section-label chiaroscuro-type-label"} -->
+						<p class="chiaroscuro-section-label chiaroscuro-type-label">Latest</p>
 						<!-- /wp:paragraph -->
-						<!-- wp:post-date {"format":"M j, Y"} /-->
+						<!-- wp:post-date {"format":"M j, Y","className":"chiaroscuro-type-meta"} /-->
 					</div>
 					<!-- /wp:group -->
-					<!-- wp:post-title {"isLink":true,"level":2} /-->
-					<!-- wp:post-excerpt {"moreText":""} /-->
-					<!-- wp:read-more {"content":"read the post  →","className":"chiaroscuro-read-more"} /-->
+					<!-- wp:post-title {"isLink":true,"level":2,"className":"chiaroscuro-type-h2"} /-->
+					<!-- wp:post-excerpt {"moreText":"","className":"chiaroscuro-type-small-paragraph"} /-->
+					<!-- wp:read-more {"content":"read the post  →","className":"chiaroscuro-read-more chiaroscuro-type-action"} /-->
 				</article>
 				<!-- /wp:group -->
 			<!-- /wp:post-template -->
@@ -39,14 +39,14 @@
 			<!-- wp:post-template -->
 				<!-- wp:group {"className":"chiaroscuro-river-row"} -->
 				<div class="wp-block-group chiaroscuro-river-row">
-					<!-- wp:post-date {"format":"M j"} /-->
-					<!-- wp:post-title {"isLink":true,"level":2} /-->
+					<!-- wp:post-date {"format":"M j","className":"chiaroscuro-type-meta"} /-->
+					<!-- wp:post-title {"isLink":true,"level":3,"className":"chiaroscuro-type-h3"} /-->
 					<!-- wp:post-featured-image {"isLink":true} /-->
 				</div>
 				<!-- /wp:group -->
 			<!-- /wp:post-template -->
 
-			<!-- wp:query-pagination {"className":"chiaroscuro-pagination","paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"}} -->
+			<!-- wp:query-pagination {"className":"chiaroscuro-pagination chiaroscuro-type-action","paginationArrow":"arrow","layout":{"type":"flex","justifyContent":"space-between"}} -->
 				<!-- wp:query-pagination-previous {"label":"newer posts"} /-->
 				<!-- wp:query-pagination-numbers /-->
 				<!-- wp:query-pagination-next {"label":"older posts"} /-->

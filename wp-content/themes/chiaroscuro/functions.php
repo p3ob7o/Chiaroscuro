@@ -680,11 +680,11 @@ function chiaroscuro_render_river_query( string $content, array $block ): string
 				<div class="chiaroscuro-river-group">
 					<div class="chiaroscuro-section-heading chiaroscuro-river-year-heading">
 						<?php if ( $is_first ) : ?>
-							<p class="chiaroscuro-section-label"><?php esc_html_e( 'All articles', 'chiaroscuro' ); ?></p>
+							<p class="chiaroscuro-section-label chiaroscuro-type-label"><?php esc_html_e( 'All articles', 'chiaroscuro' ); ?></p>
 						<?php else : ?>
 							<span class="chiaroscuro-river-year-spacer" aria-hidden="true"></span>
 						<?php endif; ?>
-						<time class="chiaroscuro-river-year" datetime="<?php echo esc_attr( $post_year ); ?>"><?php echo esc_html( $post_year ); ?></time>
+						<time class="chiaroscuro-river-year chiaroscuro-type-meta" datetime="<?php echo esc_attr( $post_year ); ?>"><?php echo esc_html( $post_year ); ?></time>
 					</div>
 					<ul class="wp-block-post-template">
 				<?php
@@ -700,8 +700,8 @@ function chiaroscuro_render_river_query( string $content, array $block ): string
 			?>
 			<li <?php post_class( 'wp-block-post' ); ?>>
 				<div class="wp-block-group chiaroscuro-river-row">
-					<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j' ) ); ?></time></div>
-					<h2 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h2>
+					<div class="wp-block-post-date chiaroscuro-type-meta"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j' ) ); ?></time></div>
+					<h3 class="wp-block-post-title chiaroscuro-type-h3"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h3>
 					<?php if ( $thumbnail_id ) : ?>
 						<figure class="wp-block-post-featured-image">
 							<a href="<?php echo esc_url( get_permalink() ); ?>" aria-label="<?php echo esc_attr( $thumbnail_label ); ?>"><?php echo wp_kses_post( chiaroscuro_render_river_thumbnail( $thumbnail_id ) ); ?></a>
@@ -761,7 +761,7 @@ function chiaroscuro_render_river_pagination( WP_Query $river, int $current, int
 
 	ob_start();
 	?>
-	<nav class="wp-block-query-pagination chiaroscuro-pagination" aria-label="<?php esc_attr_e( 'Posts pagination', 'chiaroscuro' ); ?>">
+	<nav class="wp-block-query-pagination chiaroscuro-pagination chiaroscuro-type-action" aria-label="<?php esc_attr_e( 'Posts pagination', 'chiaroscuro' ); ?>">
 		<?php if ( $current > 1 ) : ?>
 			<a href="<?php echo esc_url( chiaroscuro_get_river_page_url( $page_key, $current - 1 ) ); ?>"><?php esc_html_e( 'newer posts', 'chiaroscuro' ); ?></a>
 		<?php else : ?>
@@ -880,9 +880,9 @@ function chiaroscuro_render_related_query( string $content, array $block ): stri
 					<?php else : ?>
 						<div class="wp-block-post-featured-image chiaroscuro-related__placeholder" aria-hidden="true"></div>
 					<?php endif; ?>
-					<div class="wp-block-post-date"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y' ) ); ?></time></div>
-					<h3 class="wp-block-post-title"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h3>
-					<div class="wp-block-post-excerpt"><p class="wp-block-post-excerpt__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 12 ) ); ?></p></div>
+					<div class="wp-block-post-date chiaroscuro-type-meta"><time datetime="<?php echo esc_attr( get_the_date( DATE_W3C ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y' ) ); ?></time></div>
+					<h4 class="wp-block-post-title chiaroscuro-type-h4"><a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a></h4>
+					<div class="wp-block-post-excerpt chiaroscuro-type-small-paragraph"><p class="wp-block-post-excerpt__excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 12 ) ); ?></p></div>
 				</li>
 				<?php
 			endwhile;
@@ -903,13 +903,14 @@ function chiaroscuro_render_related_query( string $content, array $block ): stri
  */
 function chiaroscuro_comment_form_defaults( array $defaults ): array {
 	$defaults['title_reply']          = esc_html__( 'Leave a reply', 'chiaroscuro' );
-	$defaults['title_reply_before']   = '<h3 id="reply-title" class="comment-reply-title">';
+	$defaults['title_reply_before']   = '<h3 id="reply-title" class="comment-reply-title chiaroscuro-type-label">';
 	$defaults['title_reply_after']    = '</h3>';
 	$defaults['label_submit']         = esc_html__( 'Post comment', 'chiaroscuro' );
+	$defaults['class_submit']         = 'submit wp-block-button__link chiaroscuro-type-button';
 	$defaults['comment_notes_before'] = '';
 	$defaults['comment_notes_after']  = '';
 	$defaults['comment_field']        = sprintf(
-		'<p class="comment-form-comment"><label class="screen-reader-text" for="comment">%1$s</label><textarea id="comment" name="comment" cols="45" rows="4" maxlength="65525" required placeholder="%2$s"></textarea></p>',
+		'<p class="comment-form-comment"><label class="screen-reader-text" for="comment">%1$s</label><textarea class="chiaroscuro-type-small-paragraph" id="comment" name="comment" cols="45" rows="4" maxlength="65525" required placeholder="%2$s"></textarea></p>',
 		esc_html__( 'Comment', 'chiaroscuro' ),
 		esc_attr__( 'Write a comment...', 'chiaroscuro' )
 	);
@@ -927,13 +928,13 @@ function chiaroscuro_comment_form_fields( array $fields ): array {
 	$commenter = wp_get_current_commenter();
 
 	$fields['author'] = sprintf(
-		'<p class="comment-form-author"><label class="screen-reader-text" for="author">%1$s</label><input id="author" name="author" type="text" value="%2$s" size="30" autocomplete="name" placeholder="%1$s" /></p>',
+		'<p class="comment-form-author"><label class="screen-reader-text" for="author">%1$s</label><input class="chiaroscuro-type-small-paragraph" id="author" name="author" type="text" value="%2$s" size="30" autocomplete="name" placeholder="%1$s" /></p>',
 		esc_html__( 'Name', 'chiaroscuro' ),
 		esc_attr( $commenter['comment_author'] )
 	);
 
 	$fields['email'] = sprintf(
-		'<p class="comment-form-email"><label class="screen-reader-text" for="email">%1$s</label><input id="email" name="email" type="email" value="%2$s" size="30" autocomplete="email" placeholder="%1$s" /></p>',
+		'<p class="comment-form-email"><label class="screen-reader-text" for="email">%1$s</label><input class="chiaroscuro-type-small-paragraph" id="email" name="email" type="email" value="%2$s" size="30" autocomplete="email" placeholder="%1$s" /></p>',
 		esc_html__( 'Email', 'chiaroscuro' ),
 		esc_attr( $commenter['comment_author_email'] )
 	);
@@ -964,7 +965,7 @@ function chiaroscuro_render_comments_title( string $content, array $block ): str
 	}
 
 	return sprintf(
-		'<h2 class="wp-block-comments-title">%s</h2>',
+		'<h2 class="wp-block-comments-title chiaroscuro-type-label">%s</h2>',
 		esc_html(
 			sprintf(
 				/* translators: %s: formatted number of comments. */
