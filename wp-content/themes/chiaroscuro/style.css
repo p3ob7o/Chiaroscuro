@@ -1050,6 +1050,16 @@ a {
 	gap: 12px;
 }
 
+.chiaroscuro-footer__column--social {
+	align-items: center;
+	text-align: center;
+}
+
+.chiaroscuro-footer__column--meta {
+	align-items: flex-end;
+	text-align: right;
+}
+
 .chiaroscuro-footer__meta {
 	color: var(--chiaroscuro-muted-text);
 }
@@ -1058,13 +1068,6 @@ a {
 	display: inline-block;
 	line-height: 1;
 	vertical-align: -0.08em;
-}
-
-.chiaroscuro-footer__meta a {
-	color: var(--chiaroscuro-muted-text);
-	text-decoration: underline;
-	text-decoration-color: var(--wp--preset--color--line);
-	text-underline-offset: 3px;
 }
 
 /*--------------------------------------------------------------
