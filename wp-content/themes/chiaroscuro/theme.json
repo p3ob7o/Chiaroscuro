@@ -216,7 +216,7 @@
 				{
 					"fluid": false,
 					"name": "Home Intro",
-					"size": "clamp(36px, 5.2vw, 48.5px)",
+					"size": "clamp(36px, 5.2vw, 46.5px)",
 					"slug": "home-intro"
 				},
 				{
